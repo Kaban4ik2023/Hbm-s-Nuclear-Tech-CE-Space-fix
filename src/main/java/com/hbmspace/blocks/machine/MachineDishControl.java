@@ -62,7 +62,7 @@ public class MachineDishControl extends BlockDummyableSpace implements ITooltipP
                     player.sendMessage(ChatBuilder.start("[").color(TextFormatting.DARK_AQUA)
                             .nextTranslation(this.getTranslationKey() + ".name").color(TextFormatting.DARK_AQUA)
                             .next("] ").color(TextFormatting.DARK_AQUA)
-                            .next("Dish not linked!").color(TextFormatting.RED).flush());
+                            .nextTranslation("hbmspace.stardar.not_linked").color(TextFormatting.RED).flush());
 
                     return false;
                 }
@@ -76,7 +76,7 @@ public class MachineDishControl extends BlockDummyableSpace implements ITooltipP
                     player.sendMessage(ChatBuilder.start("[").color(TextFormatting.DARK_AQUA)
                             .nextTranslation(this.getTranslationKey() + ".name").color(TextFormatting.DARK_AQUA)
                             .next("] ").color(TextFormatting.DARK_AQUA)
-                            .next("Missing control target!").color(TextFormatting.RED).flush());
+                            .nextTranslation("hbmspace.stardar.target_missing").color(TextFormatting.RED).flush());
 
                     return false;
                 }

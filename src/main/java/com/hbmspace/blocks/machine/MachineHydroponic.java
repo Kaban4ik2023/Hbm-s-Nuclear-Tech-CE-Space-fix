@@ -138,7 +138,7 @@ public class MachineHydroponic extends BlockDummyableSpace implements ILookOverl
 
         List<String> text = new ArrayList<>();
 
-        text.add((hydro.getPower() <= 200 ? TextFormatting.RED : TextFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(hydro.getPower()) + "HE");
+        text.add((hydro.getPower() <= 200 ? TextFormatting.RED : TextFormatting.GREEN) + (I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(hydro.getPower()) + "HE");
 
         text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + hydro.tanks[0].getTankType().getLocalizedName() + ": " + hydro.tanks[0].getFill() + "/" + hydro.tanks[0].getMaxFill() + "mB");
         text.add(TextFormatting.RED + "<- " + TextFormatting.RESET + hydro.tanks[1].getTankType().getLocalizedName() + ": " + hydro.tanks[1].getFill() + "/" + hydro.tanks[1].getMaxFill() + "mB");

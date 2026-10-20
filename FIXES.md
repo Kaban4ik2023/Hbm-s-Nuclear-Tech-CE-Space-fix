@@ -2,6 +2,8 @@
 
 Review of open issues as of 2026-10-20. Based on `Warfactory-Official/Hbm-s-Nuclear-Tech-CE-Space`, commit `dadae98`. Space version: 0.9.2. NTM CE dependency: 2.6.1.0. Upstream issues have not been closed or modified.
 
+Fork version 0.9.2.1 also includes the [English and Russian localization audit](LOCALIZATION.md). Its build and dedicated server check passed with all 10 regression tests.
+
 | Issue | Findings and changes |
 | --- | --- |
 | [#106](https://github.com/Warfactory-Official/Hbm-s-Nuclear-Tech-CE-Space/issues/106) | Fixed overlapping early and late mixin packages. The early configuration no longer owns the late RTG accessor package. Added a regression test for package separation and the presence of listed classes. |

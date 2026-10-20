@@ -128,7 +128,7 @@ public class BlockOrbitalStationComputer extends BlockDummyableSpace implements 
         List<String> text = new ArrayList<>();
 
         if(!station.hasEngines) {
-            text.add(TextFormatting.RED + "No engines available");
+            text.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.station.no_engines"));
         } else if(!station.errorsAt.isEmpty()) {
             for(ThreeInts errorAt : station.errorsAt) {
                 TileEntity error = world.getTileEntity(new BlockPos(errorAt.x, errorAt.y, errorAt.z));

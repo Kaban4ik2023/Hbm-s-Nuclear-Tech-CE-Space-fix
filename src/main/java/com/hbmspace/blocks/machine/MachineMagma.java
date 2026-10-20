@@ -85,11 +85,11 @@ public class MachineMagma extends BlockDummyableSpace implements ILookOverlay, I
         CelestialBody body = CelestialBody.getBody(world);
 
         if(!body.name.equals("moho")) {
-            text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! MUST BE ON MOHO ! ! !");
+            text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("hbmspace.magma.moho") + " ! ! !");
         } else if(!drill.validPosition) {
-            text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! INSUFFICIENT LAVA FOUND ! ! !");
+            text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("hbmspace.magma.lava") + " ! ! !");
         } else {
-            text.add((drill.power < drill.consumption ? TextFormatting.RED : TextFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(drill.power) + "HE");
+            text.add((drill.power < drill.consumption ? TextFormatting.RED : TextFormatting.GREEN) + (I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(drill.power) + "HE");
 
             for(int i = 0; i < drill.tanks.length; i++)
                 text.add((i == 0 ? (TextFormatting.GREEN + "-> ") : (TextFormatting.RED + "<- ")) + TextFormatting.RESET + drill.tanks[i].getTankType().getLocalizedName() + ": " + drill.tanks[i].getFill() + "/" + drill.tanks[i].getMaxFill() + "mB");

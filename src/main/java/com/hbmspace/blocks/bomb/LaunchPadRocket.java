@@ -109,7 +109,7 @@ public class LaunchPadRocket extends BlockDummyableSpace implements ILookOverlay
         if(pos.getY() - posC[1] > 2) return; // Don't show tooltip on support tower
 
         List<String> text = new ArrayList<>();
-        text.add("Required fuels:");
+        text.add(I18nUtil.resolveKey("hbmspace.fuel.required"));
 
         for(int i = 0; i < pad.tanks.length; i++) {
             FluidTankNTM tank = pad.tanks[i];

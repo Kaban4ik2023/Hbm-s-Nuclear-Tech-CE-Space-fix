@@ -43,7 +43,7 @@ public class BlockAirScrubber extends BlockDummyableSpace implements ILookOverla
 
         List<String> text = new ArrayList<>();
 
-        text.add((scrubber.getPower() <= 200 ? TextFormatting.RED : TextFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(scrubber.getPower()) + "HE");
+        text.add((scrubber.getPower() <= 200 ? TextFormatting.RED : TextFormatting.GREEN) + (I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(scrubber.getPower()) + "HE");
         text.add(TextFormatting.RED + "<- " + TextFormatting.RESET + scrubber.tank.getTankType().getLocalizedName() + ": " + scrubber.tank.getFill() + "/" + scrubber.tank.getMaxFill() + "mB");
 
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);

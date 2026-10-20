@@ -1,5 +1,7 @@
 package com.hbmspace.blocks.machine;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,10 +55,10 @@ public class BlockAtmosphereEditor extends BlockContainerBakeableSpace implement
 
     @Override
     public void addInformation(@NotNull ItemStack stack, World world, @NotNull List<String> tooltip, @NotNull ITooltipFlag flag) {
-        tooltip.add(TextFormatting.GOLD + "Use screwdriver to turn on and off");
-        tooltip.add(TextFormatting.GOLD + "Use hand drill to increase/decrease throughput");
-        tooltip.add(TextFormatting.GOLD + "Use defuser to switch emission/capture mode");
-        tooltip.add(TextFormatting.GOLD + "Use fluid identifier to change fluid");
+        tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.atmosphere_editor.toggle"));
+        tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.atmosphere_editor.throughput"));
+        tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.atmosphere_editor.mode"));
+        tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.atmosphere_editor.fluid"));
     }
 
     @Override
@@ -75,10 +77,10 @@ public class BlockAtmosphereEditor extends BlockContainerBakeableSpace implement
 
         List<String> text = new ArrayList<>();
 
-        text.add("State: " + (editor.isOn ? "RUNNING" : "OFF"));
-        text.add("Current gas: " + editor.fluid.getLocalizedName() + " - " + pressure);
-        text.add("Current mode: " + (editor.isEmitting ? "EMITTING" : "CAPTURING"));
-        text.add("Current throughput: " + Math.pow(10, editor.throughputFactor) / AstronomyUtil.MB_PER_ATM);
+        text.add((I18nUtil.resolveKey("hbmspace.machine.state") + " ") + (editor.isOn ? I18nUtil.resolveKey("hbmspace.machine.running") : I18nUtil.resolveKey("hbmspace.machine.off")));
+        text.add((I18nUtil.resolveKey("hbmspace.atmosphere.gas") + " ") + editor.fluid.getLocalizedName() + " - " + pressure);
+        text.add((I18nUtil.resolveKey("hbmspace.atmosphere.mode") + " ") + (editor.isEmitting ? I18nUtil.resolveKey("hbmspace.atmosphere.emitting") : I18nUtil.resolveKey("hbmspace.atmosphere.capturing")));
+        text.add((I18nUtil.resolveKey("hbmspace.atmosphere.throughput") + " ") + Math.pow(10, editor.throughputFactor) / AstronomyUtil.MB_PER_ATM);
 
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
@@ -124,7 +126,7 @@ public class BlockAtmosphereEditor extends BlockContainerBakeableSpace implement
             FluidType type = ((IItemFluidIdentifier) player.getHeldItem(hand).getItem()).getType(world, pos.getX(), pos.getY(), pos.getZ(), player.getHeldItem(hand));
             editor.fluid = type;
             editor.markDirty();
-            player.sendMessage(ChatBuilder.start("Changed type to ").color(TextFormatting.YELLOW).nextTranslation(type.getConditionalName()).next("!").flush());
+            player.sendMessage(new TextComponentTranslation("hbmspace.fluid.changed", new TextComponentTranslation(type.getConditionalName())).setStyle(new net.minecraft.util.text.Style().setColor(TextFormatting.YELLOW)));
 
             return true;
         }

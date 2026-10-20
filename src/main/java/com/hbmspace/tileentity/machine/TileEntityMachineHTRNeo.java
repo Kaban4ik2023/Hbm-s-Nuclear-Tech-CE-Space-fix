@@ -1,5 +1,7 @@
 package com.hbmspace.tileentity.machine;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
@@ -236,15 +238,15 @@ public class TileEntityMachineHTRNeo extends TileEntityCooledBase implements ITi
     @Override
     public void addErrors(List<String> errors) {
         if(plasmaEnergySync < fuelCost) {
-            errors.add(TextFormatting.RED + "Insufficient plasma energy: needs " + BobMathUtil.getShortNumber(fuelCost) + " TU");
+            errors.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.thruster.plasma_needed", BobMathUtil.getShortNumber(fuelCost)));
         }
 
         if(power < maxPower) {
-            errors.add(TextFormatting.RED + "Insufficient power");
+            errors.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.thruster.insufficient_power"));
         }
 
         if(!isCool()) {
-            errors.add(TextFormatting.RED + "Coolant loop not operational!");
+            errors.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.thruster.coolant_loop"));
         }
     }
 

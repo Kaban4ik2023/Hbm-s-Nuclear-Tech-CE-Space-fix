@@ -18,7 +18,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -85,7 +84,7 @@ public class MachineAlkylation extends BlockDummyableSpace implements ILookOverl
 
         List<String> text = new ArrayList<>();
 
-        text.add((alkylation.power < alkylation.getMaxPower() / 20 ? TextFormatting.RED : TextFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(alkylation.power) + "HE");
+        text.add((alkylation.power < alkylation.getMaxPower() / 20 ? TextFormatting.RED : TextFormatting.GREEN) + (I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(alkylation.power) + "HE");
 
         for(int i = 0; i < alkylation.tanks.length; i++) {
             if(alkylation.tanks[i].getTankType() == Fluids.NONE) continue;
@@ -115,10 +114,8 @@ public class MachineAlkylation extends BlockDummyableSpace implements ILookOverl
                 alkylation.tanks[0].setTankType(type);
                 alkylation.markDirty();
                 player.sendMessage(
-                        new TextComponentString("Changed type to ")
+                        new TextComponentTranslation("hbmspace.fluid.changed", new TextComponentTranslation(type.getConditionalName()))
                                 .setStyle(new Style().setColor(TextFormatting.YELLOW))
-                                .appendSibling(new TextComponentTranslation(type.getConditionalName()))
-                                .appendSibling(new TextComponentString("!"))
                 );
 
                 return true;

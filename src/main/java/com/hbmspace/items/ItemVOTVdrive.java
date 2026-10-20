@@ -1,5 +1,7 @@
 package com.hbmspace.items;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 import com.google.common.collect.ImmutableMap;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.util.I18nUtil;
@@ -22,7 +24,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -74,8 +75,8 @@ public class ItemVOTVdrive extends ItemEnumMultiSpace<SolarSystem.Body> {
                 identifier = "0x" + Integer.toHexString(new ChunkPos(destination.x, destination.z).hashCode()).toUpperCase();
             }
 
-            tooltip.add("Destination: ORBITAL STATION");
-            tooltip.add("Station: " + identifier);
+            tooltip.add(I18nUtil.resolveKey("hbmspace.destination.station"));
+            tooltip.add(I18nUtil.resolveKey("hbmspace.drive.station", identifier));
             return;
         }
 
@@ -84,17 +85,17 @@ public class ItemVOTVdrive extends ItemEnumMultiSpace<SolarSystem.Body> {
             processingLevel = destination.body.getProcessingLevel(CelestialBody.getBody(worldIn));
         }
 
-        tooltip.add("Destination: " + TextFormatting.AQUA + I18nUtil.resolveKey("body." + destination.body.name));
+        tooltip.add((I18nUtil.resolveKey("hbmspace.destination.label") + " ") + TextFormatting.AQUA + I18nUtil.resolveKey("body." + destination.body.name));
 
         if (destination.x == 0 && destination.z == 0) {
-            tooltip.add(TextFormatting.GOLD + "Needs destination coordinates!");
+            tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.drive.needs_coordinates"));
         } else if (!getProcessed(stack)) {
-            tooltip.add("Process requirement: Level " + processingLevel);
-            tooltip.add(TextFormatting.GOLD + "Needs processing!");
-            tooltip.add("Target coordinates: " + destination.x + ", " + destination.z);
+            tooltip.add(I18nUtil.resolveKey("hbmspace.drive.process_level", processingLevel));
+            tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.drive.needs_processing"));
+            tooltip.add(I18nUtil.resolveKey("hbmspace.drive.coordinates", destination.x, destination.z));
         } else {
-            tooltip.add(TextFormatting.GREEN + "Processed!");
-            tooltip.add("Target coordinates: " + destination.x + ", " + destination.z);
+            tooltip.add(TextFormatting.GREEN + I18nUtil.resolveKey("hbmspace.drive.processed"));
+            tooltip.add(I18nUtil.resolveKey("hbmspace.drive.coordinates", destination.x, destination.z));
         }
     }
 
@@ -280,9 +281,9 @@ public class ItemVOTVdrive extends ItemEnumMultiSpace<SolarSystem.Body> {
                 Destination target = new Destination(CelestialBody.getEnum(world), x, z);
 
                 if(station.recallPod(target)) {
-                    player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + "Recalling drop pod to coordinates: " + x + ", " + z));
+                    player.sendMessage(new TextComponentTranslation("hbmspace.drive.recall", x, z).setStyle(new net.minecraft.util.text.Style().setColor(TextFormatting.YELLOW).setItalic(true)));
                 } else {
-                    player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + "Could not recall drop pod from station!"));
+                    player.sendMessage(new TextComponentTranslation("hbmspace.drive.recall_failed").setStyle(new net.minecraft.util.text.Style().setColor(TextFormatting.YELLOW).setItalic(true)));
                 }
             }
 
@@ -297,7 +298,7 @@ public class ItemVOTVdrive extends ItemEnumMultiSpace<SolarSystem.Body> {
         setProcessed(stack, true);
 
         if (!world.isRemote) {
-            player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + "Set landing coordinates to: " + pos.getX() + ", " + pos.getZ()));
+            player.sendMessage(new TextComponentTranslation("hbmspace.drive.landing_set", pos.getX(), pos.getZ()).setStyle(new net.minecraft.util.text.Style().setColor(TextFormatting.YELLOW).setItalic(true)));
         }
 
         return EnumActionResult.SUCCESS;

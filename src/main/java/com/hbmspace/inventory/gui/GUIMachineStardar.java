@@ -185,9 +185,9 @@ public class GUIMachineStardar extends GuiInfoContainer {
         super.drawScreen(mouseX, mouseY, partialTicks);
         super.renderHoveredToolTip(mouseX, mouseY);
 
-        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 129, guiTop + 124, 18, 18, mouseX, mouseY, Collections.singletonList("Focus current body"));
-        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 129, guiTop + 143, 18, 18, mouseX, mouseY, Collections.singletonList("Program new orbital station into drive"));
-        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 149, guiTop + 143, 18, 18, mouseX, mouseY, Collections.singletonList("Program current body into drive"));
+        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 129, guiTop + 124, 18, 18, mouseX, mouseY, Collections.singletonList(I18nUtil.resolveKey("hbmspace.stardar.focus_current")));
+        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 129, guiTop + 143, 18, 18, mouseX, mouseY, Collections.singletonList(I18nUtil.resolveKey("hbmspace.stardar.program_station")));
+        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 149, guiTop + 143, 18, 18, mouseX, mouseY, Collections.singletonList(I18nUtil.resolveKey("hbmspace.stardar.program_body")));
 
     }
 
@@ -216,39 +216,47 @@ public class GUIMachineStardar extends GuiInfoContainer {
         }
     }
 
+    private void drawStatus(String text, int y, int color) {
+        float scale = Math.min(1F, 112F / Math.max(1, fontRenderer.getStringWidth(text)));
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1F);
+        fontRenderer.drawString(text, (int) (10 / scale), (int) (y / scale), color);
+        GlStateManager.popMatrix();
+    }
+
     private void drawMapForeground() {
         CelestialBody activeFocus = getRenderFocusBody();
         CelestialBody displayBody = hoveredBody != null ? hoveredBody.body : activeFocus;
 
         if (displayBody == null) {
-            fontRenderer.drawString("Drag to move map", 10, 128, 0x00FF00);
-            fontRenderer.drawString("Click body to focus", 10, 148, 0x00FF00);
+            drawStatus(I18nUtil.resolveKey("hbmspace.stardar.drag"), 128, 0x00FF00);
+            drawStatus(I18nUtil.resolveKey("hbmspace.stardar.click"), 148, 0x00FF00);
             return;
         }
 
-        fontRenderer.drawString("Focus: " + getBodyDisplayName(displayBody), 10, 128, 0x00FF00);
+        drawStatus((I18nUtil.resolveKey("hbmspace.stardar.focus") + " ") + getBodyDisplayName(displayBody), 128, 0x00FF00);
         if (activeFocus != null && displayBody == activeFocus) {
             if (!displayBody.canLand) {
-                fontRenderer.drawString("Can't land here!", 10, 148, 0xFF4040);
+                drawStatus(I18nUtil.resolveKey("hbmspace.stardar.no_landing"), 148, 0xFF4040);
             } else {
                 ItemStack slotStack = inventorySlots.getSlot(0).getStack();
 
                 if (slotStack.isEmpty()) {
-                    fontRenderer.drawString("Insert drive", 10, 148, 0x00FF00);
+                    drawStatus(I18nUtil.resolveKey("hbmspace.stardar.insert_drive"), 148, 0x00FF00);
                 } else if (slotStack.getItem() == ModItemsSpace.hard_drive) {
-                    fontRenderer.drawString("Click again to land", 10, 148, 0x00FF00);
+                    drawStatus(I18nUtil.resolveKey("hbmspace.stardar.click_land"), 148, 0x00FF00);
                 } else {
-                    fontRenderer.drawString("Insert drive", 10, 148, 0x00FF00);
+                    drawStatus(I18nUtil.resolveKey("hbmspace.stardar.insert_drive"), 148, 0x00FF00);
                 }
             }
         } else {
-            fontRenderer.drawString("Click body to focus", 10, 148, 0x00FF00);
+            drawStatus(I18nUtil.resolveKey("hbmspace.stardar.click"), 148, 0x00FF00);
         }
     }
 
     private void drawLandingForeground() {
         if (star.heightmap == null) {
-            fontRenderer.drawString("Loading surface map...", 10, 148, 0x00FF00);
+            drawStatus(I18nUtil.resolveKey("hbmspace.stardar.loading"), 148, 0x00FF00);
             return;
         }
 
@@ -256,7 +264,7 @@ public class GUIMachineStardar extends GuiInfoContainer {
         int sy = lastMouseY - ((lastMouseY + (int) surfaceY) % 2);
 
         if (lastMouseX < guiLeft + MAP_X || lastMouseX >= guiLeft + MAP_X + MAP_W || lastMouseY < guiTop + MAP_Y || lastMouseY >= guiTop + MAP_Y + MAP_H) {
-            fontRenderer.drawString("Select landing zone", 10, 128, 0x00FF00);
+            drawStatus(I18nUtil.resolveKey("hbmspace.stardar.select_landing"), 128, 0x00FF00);
             return;
         }
 
@@ -271,8 +279,8 @@ public class GUIMachineStardar extends GuiInfoContainer {
         drawTexturedModalRect(sx - guiLeft - 6, sy - guiTop - 6, xSize + (canLand ? 14 : 0), 28, 14, 14);
         GUISpaceUtil.popScissor();
 
-        fontRenderer.drawString(canLand ? "Valid location" : info, 10, 128, canLand ? 0x00FF00 : 0xFF0000);
-        if (altitude > 0) fontRenderer.drawString("Target altitude: " + altitude, 10, 148, 0x00FF00);
+        drawStatus(canLand ? I18nUtil.resolveKey("hbmspace.stardar.valid") : info, 128, canLand ? 0x00FF00 : 0xFF0000);
+        if (altitude > 0) drawStatus((I18nUtil.resolveKey("hbmspace.stardar.altitude") + " ") + altitude, 148, 0x00FF00);
     }
 
     private void drawSystemMap(float partialTicks) {
@@ -2090,13 +2098,13 @@ public class GUIMachineStardar extends GuiInfoContainer {
     }
 
     private String landingInfo(int x, int z) {
-        if (star.heightmap == null) return "No heightmap";
-        if (x < 3 || x > 252 || z < 3 || z > 252) return "Outside bounds";
+        if (star.heightmap == null) return I18nUtil.resolveKey("hbmspace.stardar.no_heightmap");
+        if (x < 3 || x > 252 || z < 3 || z > 252) return I18nUtil.resolveKey("hbmspace.stardar.outside");
 
         for (int ox = x - 2; ox <= x + 2; ox++) {
             for (int oz = z - 2; oz <= z + 2; oz++) {
                 if (star.heightmap[256 * oz + ox] != star.heightmap[256 * z + x]) {
-                    return "Area not flat";
+                    return I18nUtil.resolveKey("hbmspace.stardar.not_flat");
                 }
             }
         }
@@ -2111,7 +2119,7 @@ public class GUIMachineStardar extends GuiInfoContainer {
     }
 
     private String getBodyDisplayName(CelestialBody body) {
-        if (body == null || body.name == null) return "Unknown";
+        if (body == null || body.name == null) return I18nUtil.resolveKey("hbmspace.stardar.unknown");
         String key = "body." + body.name;
         String translated = I18nUtil.resolveKey(key);
         if (translated != null && !translated.equals(key)) return translated;

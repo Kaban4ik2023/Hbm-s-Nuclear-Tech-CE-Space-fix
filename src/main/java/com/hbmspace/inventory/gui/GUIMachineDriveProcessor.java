@@ -1,5 +1,7 @@
 package com.hbmspace.inventory.gui;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -36,8 +38,8 @@ public class GUIMachineDriveProcessor extends GuiInfoContainer {
 
         this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 18, 16, 52, machine.power, machine.maxPower);
 
-        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 49, guiTop + 17, 18, 18, mouseX, mouseY, new String[] {"Clone drive"} );
-        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 38, guiTop + 61, 18, 18, mouseX, mouseY, new String[] {"Start drive processing"} );
+        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 49, guiTop + 17, 18, 18, mouseX, mouseY, new String[] {I18nUtil.resolveKey("hbmspace.drive.clone")} );
+        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 38, guiTop + 61, 18, 18, mouseX, mouseY, new String[] {I18nUtil.resolveKey("hbmspace.drive.process")} );
     }
 
     @Override
@@ -59,7 +61,7 @@ public class GUIMachineDriveProcessor extends GuiInfoContainer {
             drawTexturedModalRect(guiLeft + 59, guiTop + 63, 192, 14, p, 14);
         }
 
-        fontRenderer.drawString(machine.status, guiLeft + 41, guiTop + 86, 0xFFFFFF);
+        fontRenderer.drawString(machine.getLocalizedStatus(), guiLeft + 41, guiTop + 86, 0xFFFFFF);
     }
 
     @Override

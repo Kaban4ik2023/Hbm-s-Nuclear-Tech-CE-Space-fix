@@ -1,5 +1,7 @@
 package com.hbmspace.inventory.gui;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbmspace.inventory.container.ContainerMachineDischarger;
 import com.hbmspace.tileentity.machine.TileEntityMachineDischarger;
@@ -29,11 +31,11 @@ public class GUIMachineDischarger extends GuiInfoContainer {
         super.renderHoveredToolTip(mouseX, mouseY);
 
         this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 106 - 88, 16, 88, diFurnace.power, diFurnace.maxPower);
-        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 30, guiTop + 25, 8, 80, mouseX, mouseY, new String[] {"Temperature: " + (diFurnace.temp) + "°C"});
-        String[] text = new String[] { "Accepted Fuels:",
-                "Uranium-233",
-                "Schrabidium",
-                "Dineutronium" };
+        this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 30, guiTop + 25, 8, 80, mouseX, mouseY, new String[] {(I18nUtil.resolveKey("hbmspace.temperature.label") + " ") + (diFurnace.temp) + "°C"});
+        String[] text = new String[] { I18nUtil.resolveKey("hbmspace.fuel.accepted"),
+                I18nUtil.resolveKey("hbmmat.uranium233"),
+                I18nUtil.resolveKey("hbmmat.schrabidium"),
+                I18nUtil.resolveKey("hbmmat.dineutronium") };
         this.drawCustomInfoStat(mouseX, mouseY, guiLeft - 16, guiTop + 36, 16, 16, guiLeft - 8, guiTop + 36 + 16, text);
 
     }

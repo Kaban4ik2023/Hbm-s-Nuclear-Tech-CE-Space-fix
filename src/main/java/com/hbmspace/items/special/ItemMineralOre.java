@@ -1,5 +1,7 @@
 package com.hbmspace.items.special;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.main.MainRegistry;
 import com.hbmspace.items.IDynamicModelsSpace;
 import com.hbmspace.items.ModItemsSpace;
@@ -59,22 +61,22 @@ public class ItemMineralOre extends Item implements IDynamicModelsSpace {
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         switch (stack.getMetadata()) {
             case CLUMP_PEROXIDE:
-                tooltip.add(TextFormatting.YELLOW + "[Peroxide]");
+                tooltip.add(TextFormatting.YELLOW + I18nUtil.resolveKey("hbmspace.minerals.peroxide"));
                 break;
             case CLUMP_NITRIC:
-                tooltip.add(TextFormatting.GOLD + "[Nitric]");
+                tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.minerals.nitric"));
                 break;
             case CLUMP_SULFURIC:
-                tooltip.add(TextFormatting.YELLOW + "[Sulfuric]");
+                tooltip.add(TextFormatting.YELLOW + I18nUtil.resolveKey("hbmspace.minerals.sulfuric"));
                 break;
             case CLUMP_SOLVENT:
-                tooltip.add(TextFormatting.RED + "[Solvent]");
+                tooltip.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.minerals.solvent"));
                 break;
             case CLUMP_HYDROCHLORIC:
-                tooltip.add(TextFormatting.GREEN + "[Chloric]");
+                tooltip.add(TextFormatting.GREEN + I18nUtil.resolveKey("hbmspace.minerals.chloric"));
                 break;
             case CLUMP_SCHRABIDIC:
-                tooltip.add(TextFormatting.BLUE + "[Schrabidic]");
+                tooltip.add(TextFormatting.BLUE + I18nUtil.resolveKey("hbmspace.minerals.schrabidic"));
                 break;
         }
     }

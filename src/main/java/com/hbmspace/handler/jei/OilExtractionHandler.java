@@ -1,5 +1,7 @@
 package com.hbmspace.handler.jei;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.blocks.ModBlocks;
 import com.hbmspace.dim.CelestialBody;
 import mezz.jei.api.IGuiHelper;
@@ -42,7 +44,7 @@ public class OilExtractionHandler extends JEICelestialHandler {
             super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
 
             if (body != null && ("kerbin".equals(body.name) || "tekto".equals(body.name))) {
-                minecraft.fontRenderer.drawString("Frackable", 102, 48, 0x000000);
+                minecraft.fontRenderer.drawString(I18nUtil.resolveKey("hbmspace.jei.frackable"), 102, 48, 0x000000);
             }
         }
     }

@@ -189,12 +189,12 @@ public class TileEntityXenonThruster extends TileEntityMachineBase implements IT
     @Override
     public void addErrors(List<String> errors) {
         if(power < (long) fuelCost * POWER_COST_MULTIPLIER) {
-            errors.add(TextFormatting.RED + I18nUtil.resolveKey(getBlockType().getTranslationKey() + ".name") + " - Insufficient power: needs " + BobMathUtil.getShortNumber((long) fuelCost * POWER_COST_MULTIPLIER) + "HE");
+            errors.add(TextFormatting.RED + I18nUtil.resolveKey(getBlockType().getTranslationKey() + ".name") + " - " + I18nUtil.resolveKey("hbmspace.thruster.power_needed", BobMathUtil.getShortNumber((long) fuelCost * POWER_COST_MULTIPLIER)));
         }
 
         for(FluidTankNTM tank : tanks) {
             if(tank.getFill() < fuelCost) {
-                errors.add(TextFormatting.RED + I18nUtil.resolveKey(getBlockType().getTranslationKey() + ".name") + " - Insufficient fuel: needs " + fuelCost + "mB");
+                errors.add(TextFormatting.RED + I18nUtil.resolveKey(getBlockType().getTranslationKey() + ".name") + " - " + I18nUtil.resolveKey("hbmspace.thruster.fuel_needed", fuelCost));
             }
         }
     }

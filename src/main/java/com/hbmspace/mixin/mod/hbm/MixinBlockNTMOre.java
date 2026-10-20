@@ -30,10 +30,10 @@ public class MixinBlockNTMOre {
         }
 
         if (bodies.size() == SolarSystem.Body.values().length) {
-            tooltip.add(TextFormatting.GOLD + "Can be found anywhere");
+            tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.ore.anywhere"));
             return;
         } else if (bodies.size() == SolarSystem.Body.values().length - 1) {
-            tooltip.add(TextFormatting.GOLD + "Can be found anywhere except:");
+            tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.ore.except"));
             for (SolarSystem.Body body : SolarSystem.Body.values()) {
                 if (bodies.contains(body)) continue;
                 tooltip.add(TextFormatting.RED + " - " + I18nUtil.resolveKey("body." + body.name));
@@ -41,7 +41,7 @@ public class MixinBlockNTMOre {
             return;
         }
 
-        tooltip.add(TextFormatting.GOLD + "Can be found on:");
+        tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.ore.on"));
         for (SolarSystem.Body body : bodies) {
             tooltip.add(TextFormatting.AQUA + " - " + I18nUtil.resolveKey("body." + body.name));
         }

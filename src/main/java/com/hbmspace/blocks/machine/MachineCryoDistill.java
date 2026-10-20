@@ -109,7 +109,7 @@ public class MachineCryoDistill extends BlockDummyableSpace implements ILookOver
             text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + I18nUtil.resolveKey("hbmfluid." + distill.tanks[0].getTankType().getName().toLowerCase()));
         }
         if(hitCheck(dir, cx, cy, cz, -2, -2, -2, pos)) {
-            text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + "Power");
+            text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + I18nUtil.resolveKey("hbmspace.power"));
         }
 
         if(hitCheck(dir, cx, cy, cz, 3, -2, -2, pos)

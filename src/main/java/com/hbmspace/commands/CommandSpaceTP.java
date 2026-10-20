@@ -27,7 +27,7 @@ public class CommandSpaceTP extends CommandBase {
 
     @Override
     public @NotNull String getUsage(@NotNull ICommandSender sender) {
-        return "/dimtp <dimension_id_or_name> [player]";
+        return "commands.dimtp.usage";
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CommandSpaceTP extends CommandBase {
     @Override
     public void execute(@NotNull MinecraftServer server, @NotNull ICommandSender sender, String[] args) throws CommandException {
         if (args.length < 1) {
-            throw new CommandException(TextFormatting.RED + getUsage(sender));
+            throw new CommandException(getUsage(sender));
         }
 
         int dimensionId = -1;
@@ -52,7 +52,7 @@ public class CommandSpaceTP extends CommandBase {
                 }
             }
             if (dimensionId == -1) {
-                throw new CommandException(TextFormatting.RED + I18nUtil.resolveKey("commands.dimtp.dimension_not_found"), args[0]);
+                throw new CommandException("commands.dimtp.dimension_not_found", args[0]);
             }
         }
 
@@ -63,13 +63,13 @@ public class CommandSpaceTP extends CommandBase {
             if (sender instanceof EntityPlayerMP player) {
                 targetPlayer = player;
             } else {
-                throw new CommandException(TextFormatting.RED + I18nUtil.resolveKey("commands.dimtp.not_player"));
+                throw new CommandException("commands.dimtp.not_player");
             }
         }
 
         WorldServer targetWorld = server.getWorld(dimensionId);
         if (targetWorld == null) {
-            throw new CommandException(TextFormatting.RED + I18nUtil.resolveKey("commands.dimtp.dimension_not_found"), dimensionId);
+            throw new CommandException("commands.dimtp.dimension_not_found", dimensionId);
         }
 
         BlockPos pos = targetPlayer.getPosition();

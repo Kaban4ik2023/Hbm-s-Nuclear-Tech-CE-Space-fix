@@ -20,7 +20,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -70,9 +69,9 @@ public class MachineDysonConverterAnatmogenesis extends BlockDummyableSpace impl
 
         List<String> text = new ArrayList<>();
 
-        text.add("Current rate: " + ((double)converter.gasProduced * 20 * 60 * 60 / AstronomyUtil.MB_PER_ATM) + "atm per hour");
-        text.add("Current gas: " + converter.fluid.getLocalizedName() + " - " + pressure);
-        text.add("Current mode: " + (converter.isEmitting ? "EMITTING" : "CAPTURING"));
+        text.add(I18nUtil.resolveKey("hbmspace.atmosphere.rate", ((double)converter.gasProduced * 20 * 60 * 60 / AstronomyUtil.MB_PER_ATM)));
+        text.add((I18nUtil.resolveKey("hbmspace.atmosphere.gas") + " ") + converter.fluid.getLocalizedName() + " - " + pressure);
+        text.add((I18nUtil.resolveKey("hbmspace.atmosphere.mode") + " ") + (converter.isEmitting ? I18nUtil.resolveKey("hbmspace.atmosphere.emitting") : I18nUtil.resolveKey("hbmspace.atmosphere.capturing")));
 
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
@@ -117,10 +116,8 @@ public class MachineDysonConverterAnatmogenesis extends BlockDummyableSpace impl
                 converter.fluid = type;
                 converter.markDirty();
                 player.sendMessage(
-                        new TextComponentString("Changed type to ")
+                        new TextComponentTranslation("hbmspace.fluid.changed", new TextComponentTranslation(type.getConditionalName()))
                                 .setStyle(new Style().setColor(TextFormatting.YELLOW))
-                                .appendSibling(new TextComponentTranslation(type.getConditionalName()))
-                                .appendSibling(new TextComponentString("!"))
                 );
             }
 

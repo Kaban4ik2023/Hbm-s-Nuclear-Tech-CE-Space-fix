@@ -78,7 +78,7 @@ public class BlockAtmosphericCompressor extends BlockDummyableSpace implements I
         if(!CelestialBody.hasTrait(world, CBT_Atmosphere.class)) {
             text.add(((TextFormatting.RED + "ERROR: ")) + TextFormatting.RESET + I18nUtil.resolveKey("CANNOT COLLECT IN VACUUM"));
         } else {
-            text.add((tower.power < tower.getMaxPower() / 20 ? TextFormatting.RED : TextFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(tower.power) + "HE");
+            text.add((tower.power < tower.getMaxPower() / 20 ? TextFormatting.RED : TextFormatting.GREEN) + (I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(tower.power) + "HE");
             text.add(((TextFormatting.RED + "<- ")) + TextFormatting.RESET + I18nUtil.resolveKey("hbmfluid." + tower.tank.getTankType().getName().toLowerCase()) + ": " + tower.tank.getFill() + "/" + tower.tank.getMaxFill() + "mB");
         }
 

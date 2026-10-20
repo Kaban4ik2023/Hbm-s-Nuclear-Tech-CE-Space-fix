@@ -43,7 +43,7 @@ public class MixinItemBedrockOreBaseClient extends Item implements IDynamicModel
     @Overwrite
     public void addInformation(@NotNull ItemStack stack, World worldIn, List<String> tooltip, @NotNull ITooltipFlag flagIn) {
         SolarSystem.Body body = BedrockOreUtil.getOreBody(stack);
-        tooltip.add("Mined on: " + I18nUtil.resolveKey("body." + body.name().toLowerCase(Locale.US)));
+        tooltip.add(I18nUtil.resolveKey("hbmspace.ore.mined_on", I18nUtil.resolveKey("body." + body.name().toLowerCase(Locale.US))));
 
         for(ItemBedrockOreNew.BedrockOreType type : BedrockOreUtil.getTypesForBody(body)) {
             double amount = BedrockOreUtil.getOreAmount(stack, type);

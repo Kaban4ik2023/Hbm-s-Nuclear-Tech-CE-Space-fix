@@ -330,7 +330,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements ITic
     public void addErrors(List<String> errors) {
         for(FluidTankNTM tank : tanks) {
             if(tank.getFill() < fuelCost) {
-                errors.add(TextFormatting.RED + I18nUtil.resolveKey(getBlockType().getTranslationKey() + ".name") + " - Insufficient fuel: needs " + fuelCost + "mB");
+                errors.add(TextFormatting.RED + I18nUtil.resolveKey(getBlockType().getTranslationKey() + ".name") + " - " + I18nUtil.resolveKey("hbmspace.thruster.fuel_needed", fuelCost));
             }
         }
     }

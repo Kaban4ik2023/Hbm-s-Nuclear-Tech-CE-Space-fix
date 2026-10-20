@@ -126,11 +126,11 @@ public class MachineDysonReceiver extends BlockDummyableSpace implements ILookOv
 
         if(receiver.swarmId > 0) {
             text.add("ID: " + receiver.swarmId);
-            text.add("Swarm: " + receiver.swarmCount + " members");
-            text.add("Consumers: " + receiver.swarmConsumers + " consumers");
-            text.add("Power: " + BobMathUtil.getShortNumber(energyOutput) + "HE/s");
+            text.add(I18nUtil.resolveKey("hbmspace.dyson.members", receiver.swarmCount));
+            text.add(I18nUtil.resolveKey("hbmspace.dyson.consumers", receiver.swarmConsumers));
+            text.add((I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(energyOutput) + "HE/s");
         } else {
-            text.add("No Satellite ID-Chip installed!");
+            text.add(I18nUtil.resolveKey("hbmspace.dyson.no_chip"));
         }
 
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);

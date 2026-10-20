@@ -175,7 +175,7 @@ public class TileEntityMachineRocketAssembly extends TileEntityMachineBase imple
             }
 
             if(platformFailed) {
-                rocket.addIssue(TextFormatting.RED + "VAB ceiling too low ");
+                rocket.addIssue("hbmspace.rocket.ceiling_low");
             }
 
             networkPackNT(250);

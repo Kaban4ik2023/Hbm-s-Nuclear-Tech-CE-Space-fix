@@ -38,17 +38,7 @@ public class CommandStations extends CommandBase {
 
     @Override
     public @NotNull String getUsage(@NotNull ICommandSender sender) {
-        return String.format(Locale.US,
-                """
-                        %s/%s launch %s- Spawns a station for the held drive.
-                        %s/%s tp %s- Teleport to held drive station.
-                        %s/%s list %s- Lists all active stations.
-                        %s/%s fetch <id|name> %s- Creates a drive programmed with a specific station ID or name.""",
-                TextFormatting.GREEN, getName(), TextFormatting.LIGHT_PURPLE,
-                TextFormatting.GREEN, getName(), TextFormatting.LIGHT_PURPLE,
-                TextFormatting.GREEN, getName(), TextFormatting.LIGHT_PURPLE,
-                TextFormatting.GREEN, getName(), TextFormatting.LIGHT_PURPLE
-        );
+        return "commands.station.usage";
     }
 
     @Override

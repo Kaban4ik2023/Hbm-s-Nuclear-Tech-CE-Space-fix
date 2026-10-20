@@ -1,5 +1,9 @@
 package com.hbmspace.dim.trait;
 
+import net.minecraft.util.text.ITextComponent;
+
+import net.minecraft.util.text.TextComponentTranslation;
+
 import com.hbm.entity.mob.EntityUFO;
 import com.hbm.entity.mob.glyphid.*;
 import com.hbm.entity.siege.SiegeTier;
@@ -17,7 +21,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
@@ -31,7 +34,7 @@ import java.util.Random;
 public class CBT_Invasion extends CelestialBodyTrait {
 
     private final BossInfoServer bossInfo = (BossInfoServer) new BossInfoServer(
-            new TextComponentString("Invasion"), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS
+            new TextComponentTranslation("hbmspace.invasion.name"), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS
     ).setDarkenSky(true);
 
     public int wave;
@@ -86,7 +89,7 @@ public class CBT_Invasion extends CelestialBodyTrait {
                 warningPlayed = true;
                 MainRegistry.proxy.me().playSound(HBMSpaceSoundHandler.alertPing, 10F, 1F);
                 MainRegistry.proxy.me().sendMessage(
-                        new TextComponentString("Incoming Invasion!").setStyle(new Style().setColor(TextFormatting.RED))
+                        new TextComponentTranslation("hbmspace.invasion.incoming").setStyle(new Style().setColor(TextFormatting.RED))
                 );
             }
         }
@@ -194,7 +197,7 @@ public class CBT_Invasion extends CelestialBodyTrait {
     private void advanceWave(World world) {
         wave++;
         kills = 0;
-        broadcast(world, "Wave " + (wave == 4 ? "FINAL" : wave) + " is starting!", TextFormatting.GOLD);
+        broadcast(world, new TextComponentTranslation("hbmspace.invasion.wave_start", getDisplayName()), TextFormatting.GOLD);
     }
 
     public void spawnAttempt(World world) {
@@ -259,7 +262,7 @@ public class CBT_Invasion extends CelestialBodyTrait {
 
             for (EntityPlayer player : entity.world.playerEntities) {
                 player.sendMessage(
-                        new TextComponentString("The Invasion Is Over!").setStyle(new Style().setColor(TextFormatting.YELLOW))
+                        new TextComponentTranslation("hbmspace.invasion.over").setStyle(new Style().setColor(TextFormatting.YELLOW))
                 );
             }
 
@@ -283,8 +286,7 @@ public class CBT_Invasion extends CelestialBodyTrait {
         world.spawnEntity(entity);
     }
 
-    private void broadcast(World world, String text, TextFormatting color) {
-        TextComponentString message = new TextComponentString(text);
+    private void broadcast(World world, ITextComponent message, TextFormatting color) {
         message.setStyle(new Style().setColor(color).setBold(true));
 
         for (EntityPlayer p : world.playerEntities) {
@@ -356,8 +358,8 @@ public class CBT_Invasion extends CelestialBodyTrait {
         return killreq - kills;
     }
 
-    public TextComponentString getDisplayName() {
-        return new TextComponentString("Wave " + (wave == 4 ? "FINAL" : wave));
+    public TextComponentTranslation getDisplayName() {
+        return new TextComponentTranslation("hbmspace.invasion.wave", wave == 4 ? new TextComponentTranslation("hbmspace.invasion.final") : wave);
     }
 
     public BossInfoServer getBossInfo() {

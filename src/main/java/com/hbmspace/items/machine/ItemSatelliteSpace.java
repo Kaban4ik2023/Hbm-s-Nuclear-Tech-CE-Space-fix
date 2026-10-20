@@ -1,5 +1,7 @@
 package com.hbmspace.items.machine;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
 import com.hbm.items.ISatChip;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.util.I18nUtil;
@@ -12,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -109,7 +110,7 @@ public class ItemSatelliteSpace extends ItemCustomMissilePart implements ISatChi
 
             Satellite.orbit(targetWorld, Satellite.getIDFromStack(stack), getFreq(stack), player.posX, player.posY, player.posZ);
 
-            player.sendMessage(new TextComponentString("Satellite launched successfully!"));
+            player.sendMessage(new TextComponentTranslation("hbmspace.satellite.launched"));
         }
 
         stack.shrink(1);

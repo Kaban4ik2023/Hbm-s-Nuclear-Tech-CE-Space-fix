@@ -1,5 +1,7 @@
 package com.hbmspace.entity.missile;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbmspace.config.SpaceConfig;
@@ -919,7 +921,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
             text.add(TextFormatting.AQUA + I18nUtil.resolveKey("station.travelling") + ": " + TextFormatting.RESET + I18nUtil.resolveKey("body." + station.target.name));
             text.add(TextFormatting.AQUA + I18nUtil.resolveKey("station.progress") + ": " + TextFormatting.RESET + Math.round(progress * 100) + "%");
 
-            ILookOverlay.printGeneric(event, "Rocket", 0xffff00, 0x404000, text);
+            ILookOverlay.printGeneric(event, I18nUtil.resolveKey("entity.entity_rideable_rocket.name"), 0xffff00, 0x404000, text);
             return;
         }
 
@@ -935,41 +937,41 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
         boolean canLaunch = to.body != null && state == RocketState.AWAITING;
 
         if(state == RocketState.NEEDSFUEL) {
-            text.add(TextFormatting.RED + "Rocket has no fuel!");
+            text.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.no_fuel"));
         } else if(canLaunch && !rocket.hasSufficientFuel(from.body, to.body, from.inOrbit, to.inOrbit)) {
-            text.add(TextFormatting.RED + "Rocket can't reach destination!");
+            text.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.out_of_range"));
             canLaunch = false;
         }
 
         Entity firstPassenger = getPassengers().isEmpty() ? null : getPassengers().getFirst();
         if(firstPassenger == null) {
-            text.add("Interact to enter");
+            text.add(I18nUtil.resolveKey("hbmspace.rocket.enter"));
         } else if(firstPassenger != player) {
-            text.add("OCCUPIED");
+            text.add(I18nUtil.resolveKey("hbmspace.rocket.occupied"));
         } else {
             if(to.inOrbit) {
-                text.add("Destination: ORBITAL STATION");
+                text.add(I18nUtil.resolveKey("hbmspace.destination.station"));
             } else if(to.body != null) {
-                text.add("Destination: " + I18nUtil.resolveKey("body." + to.body.name));
+                text.add((I18nUtil.resolveKey("hbmspace.destination.label") + " ") + I18nUtil.resolveKey("body." + to.body.name));
             } else {
-                text.add("Destination: NO DRIVE INSTALLED");
+                text.add(I18nUtil.resolveKey("hbmspace.destination.no_drive"));
             }
 
             if(canLaunch) {
-                text.add("JUMP TO LAUNCH");
+                text.add(I18nUtil.resolveKey("hbmspace.rocket.jump"));
             } else if(state == RocketState.LANDED) {
-                text.add("Insert next drive to continue");
+                text.add(I18nUtil.resolveKey("hbmspace.rocket.next_drive"));
             }
 
             ItemStack stack = player.getHeldItemMainhand();
             if((state == RocketState.LANDED || state == RocketState.AWAITING) && !stack.isEmpty() && stack.getItem() instanceof ItemVOTVdrive) {
                 if(ItemVOTVdrive.getProcessed(stack)) {
-                    text.add("Interact to swap drive");
+                    text.add(I18nUtil.resolveKey("hbmspace.rocket.swap_drive"));
                 }
             }
         }
 
-        ILookOverlay.printGeneric(event, "Rocket", 0xffff00, 0x404000, text);
+        ILookOverlay.printGeneric(event, I18nUtil.resolveKey("entity.entity_rideable_rocket.name"), 0xffff00, 0x404000, text);
     }
 
     @Override

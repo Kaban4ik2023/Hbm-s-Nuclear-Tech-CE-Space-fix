@@ -131,7 +131,7 @@ public class MachineHTR3 extends BlockDummyableSpace implements ILookOverlay {
             }
 
             if(world.getTileEntity(pos) instanceof TileEntityProxyCombo) {
-                text.add("Connect to PWR from here");
+                text.add(I18nUtil.resolveKey("hbmspace.thruster.connect_pwr"));
             }
         }
 

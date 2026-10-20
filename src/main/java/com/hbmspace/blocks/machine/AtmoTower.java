@@ -73,7 +73,7 @@ public class AtmoTower extends BlockDummyableSpace implements ILookOverlay {
             return;
 
         List<String> text = new ArrayList<>();
-        text.add((tower.power < tower.getMaxPower() / 20 ? TextFormatting.RED : TextFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(tower.power) + "HE");
+        text.add((tower.power < tower.getMaxPower() / 20 ? TextFormatting.RED : TextFormatting.GREEN) + (I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(tower.power) + "HE");
 
         for(int i = 0; i < tower.tanks.length; i++)
             text.add((i < 1 ? (TextFormatting.GREEN + "-> ") : (TextFormatting.RED + "<- ")) + TextFormatting.RESET + I18nUtil.resolveKey("hbmfluid." + tower.tanks[i].getTankType().getName().toLowerCase()) + ": " + tower.tanks[i].getFill() + "/" + tower.tanks[i].getMaxFill() + "mB");

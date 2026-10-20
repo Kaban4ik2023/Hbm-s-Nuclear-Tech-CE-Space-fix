@@ -40,7 +40,7 @@ public class ItemAtmosphereScanner extends ItemBakedSpace {
         }
 
         if(!hasAtmosphere) {
-            PacketDispatcher.wrapper.sendTo(new PlayerInformPacketLegacy(ChatBuilder.start("NEAR VACUUM").color(TextFormatting.YELLOW).flush(), 969, 4000), player);
+            PacketDispatcher.wrapper.sendTo(new PlayerInformPacketLegacy(ChatBuilder.startTranslation("hbmspace.atmosphere.near_vacuum").color(TextFormatting.YELLOW).flush(), 969, 4000), player);
         }
     }
 }

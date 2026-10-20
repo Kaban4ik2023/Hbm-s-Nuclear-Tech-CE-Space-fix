@@ -1,5 +1,7 @@
 package com.hbmspace.inventory.gui;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ISatChip;
 import com.hbm.packet.PacketDispatcher;
@@ -108,7 +110,7 @@ public class GUIWarController extends GuiInfoContainer {
             case "setpos":
                 if(parts.length < 3) {
                     addCommandHistory("> " + command);
-                    addCommandHistory("Error, invalid args", TextFormatting.RED);
+                    addCommandHistory(I18nUtil.resolveKey("hbmspace.war.invalid_args"), TextFormatting.RED);
                     return;
                 }
 
@@ -116,12 +118,12 @@ public class GUIWarController extends GuiInfoContainer {
                 String zValueStr = parts[2];
                 if(sucker.inventory.getStackInSlot(1).isEmpty()) {
                     addCommandHistory("> " + command);
-                    addCommandHistory("No drive.", TextFormatting.RED);
+                    addCommandHistory(I18nUtil.resolveKey("hbmspace.war.no_drive"), TextFormatting.RED);
                     return;
                 }
                 if(!xValueStr.matches("-?\\d+") || !zValueStr.matches("-?\\d+")) {
                     addCommandHistory("> " + command);
-                    addCommandHistory("Invalid number format.", TextFormatting.RED);
+                    addCommandHistory(I18nUtil.resolveKey("hbmspace.war.invalid_number"), TextFormatting.RED);
                     return;
                 }
 
@@ -129,7 +131,7 @@ public class GUIWarController extends GuiInfoContainer {
                 int zValue = Integer.parseInt(zValueStr);
 
                 addCommandHistory("> " + command);
-                addCommandHistory("Set to: X=" + xValue + ", Z=" + zValue);
+                addCommandHistory(I18nUtil.resolveKey("hbmspace.war.coordinates", xValue, zValue));
 
                 data.setInteger("xcoord", xValue);
                 data.setInteger("zcoord", zValue);
@@ -139,13 +141,13 @@ public class GUIWarController extends GuiInfoContainer {
 
             case "health":
                 addCommandHistory("> " + command);
-                addCommandHistory("Requesting " + cmd + "...");
+                addCommandHistory(I18nUtil.resolveKey("hbmspace.war.requesting", cmd));
 
                 if(sat == null) {
-                    addCommandHistory("Satellite not in orbit!", TextFormatting.RED);
+                    addCommandHistory(I18nUtil.resolveKey("hbmspace.war.not_orbiting"), TextFormatting.RED);
                 } else {
                     if(sat instanceof SatelliteWar) {
-                        addCommandHistory("health: " + ((SatelliteWar) sat).getInterp());
+                        addCommandHistory(I18nUtil.resolveKey("hbmspace.war.health", ((SatelliteWar) sat).getInterp()));
                     }
                 }
 
@@ -153,14 +155,14 @@ public class GUIWarController extends GuiInfoContainer {
 
             case "fire":
                 if(sat == null) {
-                    addCommandHistory("Satellite not in orbit!", TextFormatting.RED);
+                    addCommandHistory(I18nUtil.resolveKey("hbmspace.war.not_orbiting"), TextFormatting.RED);
                 } else {
                     if(sat instanceof SatelliteWar) {
-                        addCommandHistory("Firing!");
+                        addCommandHistory(I18nUtil.resolveKey("hbmspace.war.firing"));
 
                         PacketDispatcher.wrapper.sendToServer(new SatActivatePacket(satId));
                     } else {
-                        addCommandHistory("Wrong satellite" + TextFormatting.RED);
+                        addCommandHistory(I18nUtil.resolveKey("hbmspace.war.wrong_satellite"), TextFormatting.RED);
                     }
                 }
                 break;
@@ -168,21 +170,21 @@ public class GUIWarController extends GuiInfoContainer {
             case "getsat":
                 addCommandHistory("> " + command);
                 if(sucker.inventory.getStackInSlot(2).isEmpty()) {
-                    addCommandHistory("No satellite chip in slot 2.", TextFormatting.RED);
+                    addCommandHistory(I18nUtil.resolveKey("hbmspace.war.no_chip"), TextFormatting.RED);
                 } else {
-                    addCommandHistory("Requesting Satellite ID: " + satId);
+                    addCommandHistory(I18nUtil.resolveKey("hbmspace.war.request_satellite", satId));
 
                     if(sat == null) {
-                        addCommandHistory("Satellite not in orbit!", TextFormatting.RED);
+                        addCommandHistory(I18nUtil.resolveKey("hbmspace.war.not_orbiting"), TextFormatting.RED);
                     } else {
-                        addCommandHistory("Satellite: " + sat.getClass().getSimpleName());
+                        addCommandHistory(I18nUtil.resolveKey("hbmspace.war.satellite", sat.getClass().getSimpleName()));
                     }
                 }
                 break;
 
             default:
                 addCommandHistory("> " + command);
-                addCommandHistory("Unknown command.", TextFormatting.RED);
+                addCommandHistory(I18nUtil.resolveKey("hbmspace.war.unknown_command"), TextFormatting.RED);
                 break;
         }
 

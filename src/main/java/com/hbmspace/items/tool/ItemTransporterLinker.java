@@ -1,5 +1,9 @@
 package com.hbmspace.items.tool;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
+import com.hbm.util.I18nUtil;
+
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
@@ -21,7 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,8 +44,8 @@ public class ItemTransporterLinker extends ItemBakedSpace implements IGUIProvide
 
     @Override
     public void addInformation(@NotNull ItemStack stack, World world, @NotNull List<String> list, @NotNull ITooltipFlag flagIn) {
-        list.add("Sneak-click to save transporter");
-        list.add("Use on transporter to link to a saved transporter");
+        list.add(I18nUtil.resolveKey("hbmspace.linker.save"));
+        list.add(I18nUtil.resolveKey("hbmspace.linker.link"));
     }
 
     @Override
@@ -57,7 +60,7 @@ public class ItemTransporterLinker extends ItemBakedSpace implements IGUIProvide
         if(player.isSneaking()) {
             if(!world.isRemote) {
                 addTransporter(stack, world, transporter);
-                player.sendMessage(new TextComponentString("Added transporter to linker"));
+                player.sendMessage(new TextComponentTranslation("hbmspace.linker.saved"));
             }
         } else if(world.isRemote) {
             lastTransporter = TransporterInfo.from(world.provider.getDimension(), transporter);

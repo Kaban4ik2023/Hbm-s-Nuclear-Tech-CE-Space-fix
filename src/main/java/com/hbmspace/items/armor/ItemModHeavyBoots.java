@@ -37,13 +37,13 @@ public class ItemModHeavyBoots extends ItemArmorMod implements IDynamicModelsSpa
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(TextFormatting.BLUE + "Increases fall speed in low gravity");
-        tooltip.add(TextFormatting.BLUE + "Activated by crouching");
+        tooltip.add(TextFormatting.BLUE + I18nUtil.resolveKey("hbmspace.armor.fall_speed"));
+        tooltip.add(TextFormatting.BLUE + I18nUtil.resolveKey("hbmspace.armor.crouch"));
         tooltip.add("");
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(TextFormatting.GOLD + "Can be worn on its own!");
-        tooltip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "We take no responsibility for any deaths that may");
-        tooltip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "occur while using these boots without a space suit.");
+        tooltip.add(TextFormatting.GOLD + I18nUtil.resolveKey("hbmspace.armor.standalone"));
+        tooltip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + I18nUtil.resolveKey("hbmspace.armor.boots_warning1"));
+        tooltip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + I18nUtil.resolveKey("hbmspace.armor.boots_warning2"));
     }
 
     @Override

@@ -1,5 +1,9 @@
 package com.hbmspace.items.tool;
 
+import net.minecraft.util.text.TextComponentTranslation;
+
+import com.hbm.util.I18nUtil;
+
 import com.hbmspace.util.AstronomyUtil;
 import com.hbmspace.items.ItemBakedSpace;
 import net.minecraft.client.util.ITooltipFlag;
@@ -9,7 +13,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -25,9 +28,9 @@ public class ItemWandTime extends ItemBakedSpace {
 
     @Override
     public void addInformation(@NotNull ItemStack stack, @Nullable World worldIn, List<String> tooltip, @NotNull ITooltipFlag flagIn) {
-        tooltip.add("Creative-only item");
-        tooltip.add(TextFormatting.ITALIC + "\"Wibbly wobbly, timey-wimey... stuff\"");
-        tooltip.add("Probably doesn't work on servers");
+        tooltip.add(I18nUtil.resolveKey("hbmspace.time_wand.creative"));
+        tooltip.add(TextFormatting.ITALIC + I18nUtil.resolveKey("hbmspace.time_wand.quote"));
+        tooltip.add(I18nUtil.resolveKey("hbmspace.time_wand.server"));
     }
 
     @Override
@@ -41,7 +44,7 @@ public class ItemWandTime extends ItemBakedSpace {
             AstronomyUtil.TIME_MULTIPLIER *= 2;
         }
 
-        player.sendMessage(new TextComponentString("Celestial Time Multiplier set to: " + AstronomyUtil.TIME_MULTIPLIER));
+        player.sendMessage(new TextComponentTranslation("hbmspace.time_wand.multiplier", AstronomyUtil.TIME_MULTIPLIER));
 
         return EnumActionResult.SUCCESS;
     }

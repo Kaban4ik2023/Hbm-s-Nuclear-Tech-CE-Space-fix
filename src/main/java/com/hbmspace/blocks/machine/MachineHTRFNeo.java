@@ -90,22 +90,22 @@ public class MachineHTRFNeo extends BlockDummyableSpace implements ILookOverlay,
         if(!thruster.isFacingPrograde()) {
             text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.engineFacing") + " ! ! !");
         } else {
-            text.add("Plasma Energy: " + (thruster.plasmaEnergy == 0 ? TextFormatting.RED : TextFormatting.GREEN) + BobMathUtil.getShortNumber(thruster.plasmaEnergy) + "TU");
+            text.add((I18nUtil.resolveKey("hbmspace.thruster.plasma_energy") + " ") + (thruster.plasmaEnergy == 0 ? TextFormatting.RED : TextFormatting.GREEN) + BobMathUtil.getShortNumber(thruster.plasmaEnergy) + "TU");
 
-            text.add("Power: " + (thruster.power < thruster.getMaxPower() ? TextFormatting.RED : TextFormatting.GREEN) + BobMathUtil.getShortNumber(thruster.power) + "HE");
+            text.add((I18nUtil.resolveKey("hbmspace.power.label") + " ") + (thruster.power < thruster.getMaxPower() ? TextFormatting.RED : TextFormatting.GREEN) + BobMathUtil.getShortNumber(thruster.power) + "HE");
 
             int heat = (int) Math.ceil(thruster.temperature);
             String label = (heat > 123 ? TextFormatting.RED : TextFormatting.AQUA) + "" + heat + "K";
-            text.add("Temperature: " + label);
+            text.add((I18nUtil.resolveKey("hbmspace.temperature.label") + " ") + label);
 
             text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + thruster.coolantTanks[0].getTankType().getLocalizedName() + ": " + thruster.coolantTanks[0].getFill() + "/" + thruster.coolantTanks[0].getMaxFill() + "mB");
             text.add(TextFormatting.RED + "<- " + TextFormatting.RESET + thruster.coolantTanks[1].getTankType().getLocalizedName() + ": " + thruster.coolantTanks[1].getFill() + "/" + thruster.coolantTanks[1].getMaxFill() + "mB");
 
-            if(!thruster.isCool()) text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! INSUFFICIENT COOLING ! ! !");
+            if(!thruster.isCool()) text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("hbmspace.thruster.insufficient_cooling") + " ! ! !");
 
             if(world.getTileEntity(pos) instanceof TileEntityProxyCombo) {
                 if(posC[0] == pos.getX() || posC[2] == pos.getZ()) {
-                    text.add("Connect to Fusion Reactor from here");
+                    text.add(I18nUtil.resolveKey("hbmspace.thruster.connect_fusion"));
                 }
             }
         }

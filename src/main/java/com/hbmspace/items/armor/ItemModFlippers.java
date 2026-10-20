@@ -1,5 +1,7 @@
 package com.hbmspace.items.armor;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
@@ -33,14 +35,14 @@ public class ItemModFlippers extends ItemArmorMod implements IDynamicModelsSpace
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(TextFormatting.BLUE + "Increases swim speed");
+        tooltip.add(TextFormatting.BLUE + I18nUtil.resolveKey("hbmspace.armor.swim_speed"));
         tooltip.add("");
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Override
     public void addDesc(List<String> list, ItemStack stack, ItemStack armor) {
-        list.add(TextFormatting.DARK_PURPLE + "  " + stack.getDisplayName() + " (increased swim speed)");
+        list.add(TextFormatting.DARK_PURPLE + "  " + stack.getDisplayName() + " (" + I18nUtil.resolveKey("hbmspace.armor.swim_speed_effect") + ")");
     }
 
     @Override

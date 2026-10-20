@@ -1,5 +1,7 @@
 package com.hbmspace.tileentity.bomb;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardReceiver;
@@ -385,10 +387,6 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
             int fill = tank.getFill();
             int maxFill = tank.getMaxFill();
             String tankName = tank.getTankType().getLocalizedName();
-            if(tankName.contains(" ")) {
-                String[] split = tankName.split(" ");
-                tankName = split[split.length - 1];
-            }
             if(fill < maxFill) {
                 issues.add(TextFormatting.YELLOW + "" + fill + "/" + maxFill + "mB " + tankName);
             } else {
@@ -398,27 +396,27 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
         if(solidFuel.max > 0) {
             if(solidFuel.level < solidFuel.max) {
-                issues.add(TextFormatting.YELLOW + "" + solidFuel.level + "/" + solidFuel.max + "kg Solid Fuel");
+                issues.add(TextFormatting.YELLOW + I18nUtil.resolveKey("hbmspace.launch.solid_fuel", solidFuel.level, solidFuel.max));
             } else {
-                issues.add(TextFormatting.GREEN + "" + solidFuel.level + "/" + solidFuel.max + "kg Solid Fuel");
+                issues.add(TextFormatting.GREEN + I18nUtil.resolveKey("hbmspace.launch.solid_fuel", solidFuel.level, solidFuel.max));
             }
         }
     }
 
     public static boolean findDriveIssues(List<String> issues, RocketStruct rocket, ItemStack drive) {
         if(drive == null || !(drive.getItem() instanceof ItemVOTVdrive)) {
-            issues.add(TextFormatting.YELLOW + "No destination drive installed");
+            issues.add(TextFormatting.YELLOW + I18nUtil.resolveKey("hbmspace.launch.no_drive"));
             return true;
         }
 
         if(!ItemVOTVdrive.getProcessed(drive)) {
-            issues.add(TextFormatting.RED + "Destination drive needs processing");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.launch.unprocessed_drive"));
             return true;
         }
 
         SolarSystem.Body target = ItemVOTVdrive.getDestination(drive).body;
         if(target == SolarSystem.Body.ORBIT && rocket.capsule != ModItemsSpace.rp_capsule_20 && rocket.capsule != ModItemsSpace.rp_station_core_20) {
-            issues.add(TextFormatting.RED + "Satellite target must be a planet");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.launch.satellite_planet"));
             return true;
         }
 
@@ -427,15 +425,15 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
 
     public static void findTravelIssues(List<String> issues, RocketStruct rocket, ItemVOTVdrive.Target from, ItemVOTVdrive.Target to) {
         if(to.inOrbit && !to.isValid && rocket.capsule != ModItemsSpace.rp_station_core_20) {
-            issues.add(TextFormatting.RED + "Station not yet launched");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.launch.station_not_launched"));
         }
 
         if(to.inOrbit && to.isValid && rocket.capsule == ModItemsSpace.rp_station_core_20) {
-            issues.add(TextFormatting.RED + "Station already launched");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.launch.station_already_launched"));
         }
 
         if(!rocket.hasSufficientFuel(from.body, to.body, from.inOrbit, to.inOrbit)) {
-            issues.add(TextFormatting.RED + "Rocket can't reach destination");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.launch.out_of_range"));
         }
     }
 
@@ -448,11 +446,11 @@ public class TileEntityLaunchPadRocket extends TileEntityMachineBase implements 
         RocketStruct rocket = ItemCustomRocket.get(inventory.getStackInSlot(0));
 
         if(!canSeeSky) {
-            issues.add(TextFormatting.RED + "Pad is obstructed");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.launch.obstructed"));
         }
 
         if(power < maxPower * 0.75) {
-            issues.add(TextFormatting.RED + "Insufficient power");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.launch.no_power"));
         }
 
         findTankIssues(issues, tanks, solidFuel);

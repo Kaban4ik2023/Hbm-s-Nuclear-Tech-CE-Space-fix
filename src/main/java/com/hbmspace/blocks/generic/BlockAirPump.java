@@ -24,7 +24,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -128,10 +127,8 @@ public class BlockAirPump extends BlockContainerBakeableSpace implements ILookOv
                 pump.tank.setTankType(type);
                 pump.markDirty();
                 player.sendMessage(
-                        new TextComponentString("Changed type to ")
+                        new TextComponentTranslation("hbmspace.fluid.changed", new TextComponentTranslation(type.getConditionalName()))
                                 .setStyle(new Style().setColor(TextFormatting.YELLOW))
-                                .appendSibling(new TextComponentTranslation(type.getConditionalName()))
-                                .appendSibling(new TextComponentString("!"))
                 );
             }
         }

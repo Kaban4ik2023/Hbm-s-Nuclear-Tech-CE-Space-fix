@@ -219,10 +219,10 @@ public class MachineDysonLauncher extends BlockDummyableSpace implements ILookOv
 
         if(launcher.swarmId > 0) {
             text.add("ID: " + launcher.swarmId);
-            text.add("Swarm: " + launcher.swarmCount + " members");
-            text.add((launcher.power < TileEntityDysonLauncher.MAX_POWER ? TextFormatting.RED : TextFormatting.GREEN) + "Power: " + BobMathUtil.getShortNumber(launcher.power) + "HE");
+            text.add(I18nUtil.resolveKey("hbmspace.dyson.members", launcher.swarmCount));
+            text.add((launcher.power < TileEntityDysonLauncher.MAX_POWER ? TextFormatting.RED : TextFormatting.GREEN) + (I18nUtil.resolveKey("hbmspace.power.label") + " ") + BobMathUtil.getShortNumber(launcher.power) + "HE");
         } else {
-            text.add("No Satellite ID-Chip installed!");
+            text.add(I18nUtil.resolveKey("hbmspace.dyson.no_chip"));
         }
 
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);

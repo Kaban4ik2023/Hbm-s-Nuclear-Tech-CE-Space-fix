@@ -112,7 +112,7 @@ public class BlockOrbitalStationLauncher extends BlockOrbitalStation implements 
 
         if(pad.rocket == null || !pad.rocket.validate()) return;
 
-        text.add("Required fuels:");
+        text.add(I18nUtil.resolveKey("hbmspace.fuel.required"));
 
         for(int i = 0; i < pad.tanks.length; i++) {
             FluidTankNTM tank = pad.tanks[i];

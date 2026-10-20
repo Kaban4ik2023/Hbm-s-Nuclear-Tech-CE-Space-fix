@@ -63,15 +63,15 @@ public class ItemCustomRocket extends ItemBakedSpace implements ISatChip {
 
         if(rocket == null) return;
 
-        list.add(ChatFormatting.BOLD + "Payload: " + ChatFormatting.GRAY + I18nUtil.resolveKey(rocket.capsule.getTranslationKey() + ".name"));
-        list.add(ChatFormatting.BOLD + "Stages: " + ChatFormatting.GRAY + rocket.stages.size());
+        list.add(ChatFormatting.BOLD + (I18nUtil.resolveKey("hbmspace.rocket.payload") + " ") + ChatFormatting.GRAY + I18nUtil.resolveKey(rocket.capsule.getTranslationKey() + ".name"));
+        list.add(ChatFormatting.BOLD + (I18nUtil.resolveKey("hbmspace.rocket.stages") + " ") + ChatFormatting.GRAY + rocket.stages.size());
 
         if(hasFuel(stack)) {
-            list.add(ChatFormatting.GRAY + "Is fully fueled");
+            list.add(ChatFormatting.GRAY + I18nUtil.resolveKey("hbmspace.rocket.fueled"));
         }
 
         if(getFreq(stack) != 0) {
-            list.add(ChatFormatting.BOLD + "Satellite Frequency: " + ChatFormatting.GRAY + getFreq(stack));
+            list.add(ChatFormatting.BOLD + (I18nUtil.resolveKey("hbmspace.satellite.frequency") + " ") + ChatFormatting.GRAY + getFreq(stack));
         }
     }
 

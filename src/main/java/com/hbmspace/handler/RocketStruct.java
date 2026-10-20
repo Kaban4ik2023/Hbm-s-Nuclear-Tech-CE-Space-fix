@@ -1,5 +1,7 @@
 package com.hbmspace.handler;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemMissile;
@@ -109,39 +111,39 @@ public class RocketStruct {
         if(capsule == null && stages.isEmpty()) return issues;
 
         if(capsule == null || (capsule.attributes[0] != ItemMissile.WarheadType.APOLLO && capsule.attributes[0] != ItemMissile.WarheadType.SATELLITE))
-            issues.add(TextFormatting.RED + "Invalid Capsule/Satellite");
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.invalid_payload"));
 
         // Current stage stats
         if(stageNum < stages.size()) {
             RocketStage stage = stages.get(stageNum);
-            issues.add("Dry mass: " + getLaunchMass(stageNum) + "kg");
-            issues.add("Wet mass: " + getWetMass(stageNum) + "kg");
+            issues.add(I18nUtil.resolveKey("hbmspace.rocket.dry_mass", getLaunchMass(stageNum)));
+            issues.add(I18nUtil.resolveKey("hbmspace.rocket.wet_mass", getWetMass(stageNum)));
             if(stage.thruster != null) {
-                issues.add("Thrust: " + getThrust(stage) + "N");
-                issues.add("ISP: " + getISP(stage) + "s");
+                issues.add(I18nUtil.resolveKey("hbmspace.rocket.thrust", getThrust(stage)));
+                issues.add(I18nUtil.resolveKey("hbmspace.rocket.isp", getISP(stage)));
             }
         }
 
         for(int i = 0; i < stages.size(); i++) {
             RocketStage stage = stages.get(i);
             if(stage.fuselage == null)
-                issues.add(TextFormatting.RED + "Stage " + (i + 1) + " missing fuselage");
+                issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.stage.missing_fuselage", i + 1));
             if(stage.thruster == null)
-                issues.add(TextFormatting.RED + "Stage " + (i + 1) + " missing thruster");
+                issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.stage.missing_thruster", i + 1));
 
             if(stage.fuselage == null || stage.thruster == null)
                 continue;
 
             if(stage.thrusterCount > stage.fuselageCount)
-                issues.add(TextFormatting.RED + "Stage " + (i + 1) + " too many thrusters");
+                issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.stage.too_many_thrusters", i + 1));
             if(stage.fuselageCount % stage.thrusterCount != 0)
-                issues.add(TextFormatting.RED + "Stage " + (i + 1) + " uneven thrusters");
+                issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.stage.uneven_thrusters", i + 1));
 
             if(stage.fuselage.attributes[0] != ItemMissile.FuelType.ANY && stage.fuselage.attributes[0] != stage.thruster.attributes[0])
-                issues.add(TextFormatting.RED + "Stage " + (i + 1) + " fuel mismatch");
+                issues.add(TextFormatting.RED + I18nUtil.resolveKey("hbmspace.rocket.stage.fuel_mismatch", i + 1));
 
             if(i > 0 && stage.fins == null)
-                issues.add(TextFormatting.YELLOW + "Stage " + (i + 1) + " lacks landing legs");
+                issues.add(TextFormatting.YELLOW + I18nUtil.resolveKey("hbmspace.rocket.stage.no_legs", i + 1));
         }
 
         if(from != null && to != null) {
@@ -149,15 +151,17 @@ public class RocketStruct {
             int fuelCapacity = getFuelCapacity(stageNum);
 
             if(fuelRequirement == Integer.MAX_VALUE) {
-                issues.add(TextFormatting.YELLOW + "Insufficient thrust");
+                issues.add(TextFormatting.YELLOW + I18nUtil.resolveKey("hbmspace.rocket.insufficient_thrust"));
             } else if(fuelCapacity < fuelRequirement) {
-                issues.add(TextFormatting.YELLOW + "Insufficient fuel: " + fuelCapacity + "/" + fuelRequirement + "mB");
+                issues.add(TextFormatting.YELLOW + I18nUtil.resolveKey("hbmspace.rocket.insufficient_fuel", fuelCapacity, fuelRequirement));
             } else if(fuelCapacity > 0 && fuelRequirement > 0) {
-                issues.add(TextFormatting.GREEN + "Trip possible! " + fuelCapacity + "/" + fuelRequirement + "mB");
+                issues.add(TextFormatting.GREEN + I18nUtil.resolveKey("hbmspace.rocket.trip_possible", fuelCapacity, fuelRequirement));
             }
         }
 
-        issues.addAll(extraIssues);
+        for (String issue : extraIssues) {
+            issues.add(TextFormatting.RED + I18nUtil.resolveKey(issue));
+        }
 
         return issues;
     }

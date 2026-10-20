@@ -1,5 +1,7 @@
 package com.hbmspace.tileentity.machine;
 
+import com.hbm.util.I18nUtil;
+
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.lib.ForgeDirection;
@@ -41,6 +43,15 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
     public int maxProgress = 100; // 5 seconds
 
     public String status = "";
+
+    @SideOnly(Side.CLIENT)
+    public String getLocalizedStatus() {
+        String key = TextFormatting.getTextWithoutFormattingCodes(status);
+        if (key != null && key.startsWith("hbmspace.drive.status.")) {
+            return status.substring(0, status.indexOf(key)) + I18nUtil.resolveKey(key);
+        }
+        return status; // Preserve status text from older saves.
+    }
     public boolean hasDrive = false;
 
     private int lastTier;
@@ -65,13 +76,13 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
 
             if(power < maxPower * 0.75) {
                 isProcessing = false;
-                status = TextFormatting.RED + "No power ";
+                status = TextFormatting.RED + "hbmspace.drive.status.no_power";
             } else if(inventory.getStackInSlot(0).isEmpty() || inventory.getStackInSlot(0).getItem() != ModItemsSpace.full_drive) {
                 isProcessing = false;
                 status = "";
             } else if(getProcessingTier() < ItemVOTVdrive.getProcessingTier(inventory.getStackInSlot(0), CelestialBody.getBody(world))) {
                 isProcessing = false;
-                status = TextFormatting.RED + "Low tier ";
+                status = TextFormatting.RED + "hbmspace.drive.status.low_tier";
             }
 
             if(lastTier != getProcessingTier()) {
@@ -81,14 +92,14 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
             if(isProcessing) {
                 power -= 200;
 
-                status = TextFormatting.GREEN + "" + TextFormatting.ITALIC + "Processing  ";
+                status = TextFormatting.GREEN + "" + TextFormatting.ITALIC + "hbmspace.drive.status.processing";
                 progress++;
 
                 if(progress >= maxProgress) {
                     progress = 0;
                     isProcessing = false;
                     ItemVOTVdrive.setProcessed(inventory.getStackInSlot(0), true);
-                    status = TextFormatting.GREEN + "Done! ";
+                    status = TextFormatting.GREEN + "hbmspace.drive.status.done";
                 }
             } else {
                 progress = 0;
@@ -184,14 +195,14 @@ public class TileEntityMachineDriveProcessor extends TileEntityMachineBase imple
         if(power < maxPower * 0.75) return;
         if(inventory.getStackInSlot(0).isEmpty() || inventory.getStackInSlot(0).getItem() != ModItemsSpace.full_drive) return;
         if(inventory.getStackInSlot(1).isEmpty() || inventory.getStackInSlot(1).getItem() != ModItemsSpace.hard_drive) {
-            status = TextFormatting.RED + "No target ";
+            status = TextFormatting.RED + "hbmspace.drive.status.no_target";
             return;
         }
 
         ItemVOTVdrive.markCopied(inventory.getStackInSlot(0));
         inventory.setStackInSlot(1, inventory.getStackInSlot(0).copy());
 
-        status = TextFormatting.GREEN + "Drive cloned ";
+        status = TextFormatting.GREEN + "hbmspace.drive.status.cloned";
     }
 
     @Override
