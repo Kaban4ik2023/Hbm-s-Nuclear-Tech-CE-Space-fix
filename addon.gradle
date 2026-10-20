@@ -1,0 +1,22 @@
+import java.time.LocalDate
+import java.time.ZoneId
+
+// Use the same date for every artifact produced by a single invocation.
+// -PbuildDate=YYYY-MM-DD makes rebuilding a dated release reproducible.
+def buildDate = LocalDate.parse(providers.gradleProperty('buildDate').getOrElse(
+        LocalDate.now(ZoneId.of('Asia/Yekaterinburg')).toString())).toString()
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    archiveVersion.set("${project.version}-${buildDate}")
+}
+
+tasks.withType(Jar).configureEach {
+    manifest.attributes('Build-Date': buildDate, 'Implementation-Version': "${project.version}+fix.${buildDate}")
+}
+
+// Main sources use Java 25; unit tests load them before the Java 8 downgrade.
+tasks.named('test', Test) {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}

@@ -20,6 +20,9 @@ public class ModMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if (mixinClassName.startsWith("com.hbmspace.mixin.mod.buildcraft.")) {
+            return net.minecraftforge.fml.common.Loader.isModLoaded("buildcraftenergy");
+        }
         return true;
     }
 

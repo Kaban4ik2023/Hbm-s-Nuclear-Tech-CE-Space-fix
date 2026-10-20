@@ -29,7 +29,7 @@ public class BlockTransporterRocket extends BlockDummyableSpace {
     @Override
     public TileEntity createNewTileEntity(@NotNull World world, int meta) {
         if(meta >= 12) return new TileEntityTransporterRocket();
-        if(meta >= 6) return new TileEntityProxyCombo().fluid();
+        if(meta >= 6) return new TileEntityProxyCombo().inventory().fluid();
         return null;
     }
 

@@ -1,12 +1,12 @@
 {
   "required": true,
-  "package": "com.hbmspace.mixin",
+  "package": "com.hbmspace.mixin.early",
   "refmap": "mixins.hbmspace.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "target": "@env(DEFAULT)",
   "client": [
     "MixinEntityRenderer",
-    "mod.optifine.MixinShaders"
+    "optifine.MixinShaders"
   ],
   "mixins": [
   ],

@@ -37,6 +37,8 @@ public class TileEntityDishControl extends TileEntityMachineBase implements ITic
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
+        dish = null;
+        foundLink = false;
         isLinked = nbt.getBoolean("isLinked");
         linkPosition[0] = nbt.getInteger("linkPosX");
         linkPosition[1] = nbt.getInteger("linkPosY");
@@ -60,10 +62,14 @@ public class TileEntityDishControl extends TileEntityMachineBase implements ITic
     public void update() {
         if(world.isRemote) return;
 
-        if(!foundLink && isLinked)
-        {
-            isLinked = establishLink(linkPosition[0], linkPosition[1], linkPosition[2]);
-            foundLink = true;
+        if (isLinked && (!foundLink || dish == null || dish.isInvalid())) {
+            BlockPos target = new BlockPos(linkPosition[0], linkPosition[1], linkPosition[2]);
+            // A saved target may load after its console. Retry once its chunk exists.
+            if (world.isBlockLoaded(target)) {
+                isLinked = establishLink(linkPosition[0], linkPosition[1], linkPosition[2]);
+                foundLink = isLinked;
+                if (!isLinked) markDirty();
+            }
         }
 
         this.networkPackNT(15);
@@ -71,6 +77,10 @@ public class TileEntityDishControl extends TileEntityMachineBase implements ITic
 
     @SideOnly(Side.CLIENT)
     public TileEntityMachineStardar getLinkedDishClientSafe() {
+        if (!isLinked) return null;
+        if (dish != null && (dish.isInvalid() || !dish.getPos().equals(new BlockPos(linkPosition[0], linkPosition[1], linkPosition[2])))) {
+            dish = null;
+        }
         if (dish == null && isLinked) {
             TileEntity te = world.getTileEntity(new BlockPos(linkPosition[0], linkPosition[1], linkPosition[2]));
             if (te instanceof TileEntityMachineStardar) {
@@ -122,14 +132,21 @@ public class TileEntityDishControl extends TileEntityMachineBase implements ITic
         this.dish = null;
     }
 
-    public void tryLink(ItemStack stack)
+    public boolean tryLink(ItemStack stack)
     {
-        isLinked = linkWithSensor(stack);
+        if (!linkWithSensor(stack)) return false;
+        isLinked = true;
+        foundLink = true;
+        markDirty();
+        return true;
     }
 
     private boolean linkWithSensor(ItemStack stack)
     {
         if(!stack.isEmpty() && stack.getTagCompound() != null) {
+            NBTTagCompound tag = stack.getTagCompound();
+            if (!tag.hasKey("x", 3) || !tag.hasKey("y", 3) || !tag.hasKey("z", 3)) return false;
+            if (tag.hasKey("hbmspaceDimension", 3) && tag.getInteger("hbmspaceDimension") != world.provider.getDimension()) return false;
             // Get the StarDar coordinates from the sensor
             int x = stack.getTagCompound().getInteger("x");
             int y = stack.getTagCompound().getInteger("y");
@@ -158,6 +175,7 @@ public class TileEntityDishControl extends TileEntityMachineBase implements ITic
                 if(tile instanceof TileEntityMachineStardar) {
                     // Dish linked successfully
                     linkPosition = posC;
+                    dish = (TileEntityMachineStardar) tile;
                     return true;
                 }
             }

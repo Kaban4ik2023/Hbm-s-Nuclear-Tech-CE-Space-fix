@@ -16,6 +16,7 @@ import com.hbm.util.BufferUtil;
 import com.hbm.util.InventoryUtil;
 import com.hbmspace.items.tool.ItemTransporterLinker;
 import com.hbmspace.tileentity.ISpaceGuiProvider;
+import com.hbmspace.util.TransporterInventoryTransfer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -105,6 +106,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 
         if(linkedTransporter != null && canSend(linkedTransporter)) {
             boolean isDirty = false;
+            boolean hadCargo = itemCount() > 0;
 
             int sentItems = 0;
             int sentFluid = 0;
@@ -123,7 +125,9 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
             // Move all fluids into the target
             for(int i = 0; i < inputTankMax; i++) {
                 int o = i+inputTankMax;
-
+                if (tanks[i].getFill() <= 0 || tanks[i].getTankType() == Fluids.NONE) continue;
+                if (linkedTransporter.tanks[o].getFill() > 0
+                        && linkedTransporter.tanks[o].getTankType() != tanks[i].getTankType()) continue;
                 linkedTransporter.tanks[o].setTankType(tanks[i].getTankType());
 
                 int sourceFillLevel = tanks[i].getFill();
@@ -142,7 +146,10 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
 
 
 
-            hasSent(linkedTransporter, sentItems + (sentFluid / 1000));
+            if (sentItems > 0 || sentFluid > 0 || !hadCargo) {
+                hasSent(linkedTransporter, sentItems + MathHelper.ceil(sentFluid / 1000.0));
+                isDirty = true;
+            }
 
             if(isDirty) {
                 markChanged();
@@ -192,32 +199,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
         IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing());
         if (handler == null) return;
 
-        for (int i = 0; i < handler.getSlots(); i++) {
-            ItemStack stack = handler.extractItem(i, 1, true);
-            if (stack.isEmpty()) continue;
-
-            // Try to stack into existing slots
-            for (int j = 0; j < inputSlotMax; j++) {
-                ItemStack slotStack = inventory.getStackInSlot(j);
-                if (slotStack != null && ItemStack.areItemsEqual(slotStack, stack) && ItemStack.areItemStackTagsEqual(slotStack, stack)
-                        && slotStack.getCount() < slotStack.getMaxStackSize() && slotStack.getCount() < inventory.getSlotLimit(j)) {
-                    handler.extractItem(i, 1, false);
-                    slotStack.grow(1);
-                    return;
-                }
-            }
-
-            // Try to place in empty slot
-            for (int j = 0; j < inputSlotMax; j++) {
-                if (inventory.getStackInSlot(j).isEmpty()) {
-                    ItemStack copy = stack.copy();
-                    copy.setCount(1);
-                    inventory.setStackInSlot(j, copy);
-                    handler.extractItem(i, 1, false);
-                    return;
-                }
-            }
-        }
+        TransporterInventoryTransfer.pullOne(handler, inventory, inputSlotMax);
     }
 
     private void tryUnload(int x, int y, int z, ForgeDirection dir) {
@@ -228,38 +210,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
         IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing());
         if (handler == null) return;
 
-        for (int i = inputSlotMax; i < outputSlotMax; i++) {
-            ItemStack out = inventory.getStackInSlot(i);
-            if (out.isEmpty()) continue;
-
-            // Try to stack into existing slots in target
-            for (int j = 0; j < handler.getSlots(); j++) {
-                ItemStack target = handler.getStackInSlot(j);
-                if (ItemStack.areItemsEqual(out, target) && ItemStack.areItemStackTagsEqual(out, target)
-                        && target.getCount() < target.getMaxStackSize() && target.getCount() < handler.getSlotLimit(j)) {
-                    ItemStack stack = inventory.getStackInSlot(i).copy();
-                    stack.shrink(1);
-                    inventory.setStackInSlot(i, stack);
-                    handler.insertItem(j, new ItemStack(out.getItem(), 1, out.getMetadata()), false);
-                    return;
-                }
-            }
-
-            // Try to place in empty slot
-            for (int j = 0; j < handler.getSlots(); j++) {
-                if (handler.getStackInSlot(j).isEmpty()) {
-                    ItemStack copy = out.copy();
-                    copy.setCount(1);
-                    int inserted = handler.insertItem(j, copy, false).getCount();
-                    if (inserted == 0) {
-                        ItemStack stack = inventory.getStackInSlot(i).copy();
-                        stack.shrink(1);
-                        inventory.setStackInSlot(i, stack);
-                        return;
-                    }
-                }
-            }
-        }
+        TransporterInventoryTransfer.pushOne(inventory, inputSlotMax, outputSlotMax, handler);
     }
 
 
@@ -299,6 +250,12 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
     public void invalidate() {
         super.invalidate();
         fuelReceiver.valid = false;
+    }
+
+    @Override
+    public void validate() {
+        super.validate();
+        fuelReceiver.valid = true;
     }
 
     // splitting is commutative, order don't matter
@@ -391,7 +348,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
             if(!inventory.getStackInSlot(i).isEmpty()) count += inventory.getStackInSlot(i).getCount();
         }
         for(int i = 0; i < inputTankMax; i++) {
-            count += tanks[i].getFill() / 1000;
+            count += MathHelper.ceil(tanks[i].getFill() / 1000.0);
         }
         return count;
     }
@@ -408,10 +365,16 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
     }
 
     private void fetchLinkedTransporter() {
+        if (linkedTransporter != null && (linkedTransporter.isInvalid() || !linkedTransporter.isLoaded())) {
+            linkedTransporter = null;
+        }
         if(linkedTransporter == null && linkedTransporterInfo != null) {
             World transporterWorld = DimensionManager.getWorld(linkedTransporterInfo.dimensionId);
+            if (transporterWorld == null) return;
+            BlockPos linkedPos = new BlockPos(linkedTransporterInfo.x, linkedTransporterInfo.y, linkedTransporterInfo.z);
+            if (!transporterWorld.isBlockLoaded(linkedPos)) return;
             TileEntity te = transporterWorld.getTileEntity(new BlockPos(linkedTransporterInfo.x, linkedTransporterInfo.y, linkedTransporterInfo.z));
-            if(te instanceof TileEntityTransporterBase) {
+            if(te instanceof TileEntityTransporterBase && te != this && te.getClass() == getClass()) {
                 linkedTransporter = (TileEntityTransporterBase) te;
             }
         }
@@ -443,7 +406,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
         linkedTransporter = null;
         int dimensionId = nbt.getInteger("dimensionId");
         int[] coords = nbt.getIntArray("linkedTo");
-        if(coords.length > 0) {
+        if(coords.length == 3) {
             linkedTransporterInfo = new ItemTransporterLinker.TransporterInfo("Linked Transporter", dimensionId, coords[0], coords[1], coords[2]);
         } else {
             linkedTransporterInfo = null;
@@ -466,10 +429,12 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
         if(linkedTransporter != null) {
             linkedTransporter.linkedTransporter = null;
             linkedTransporter.linkedTransporterInfo = null;
+            linkedTransporter.markDirty();
         }
 
         linkedTransporter = null;
         linkedTransporterInfo = null;
+        markDirty();
     }
 
     // Is commutative, will automatically link and unlink its pair
@@ -499,6 +464,7 @@ public abstract class TileEntityTransporterBase extends TileEntityMachineBase im
                 linkedTransporter.fetchLinkedTransporter();
 
                 hasConnected(linkedTransporter);
+                linkedTransporter.markDirty();
             }
         }
 

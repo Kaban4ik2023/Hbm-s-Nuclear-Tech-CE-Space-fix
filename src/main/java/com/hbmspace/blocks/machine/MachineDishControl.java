@@ -45,11 +45,13 @@ public class MachineDishControl extends BlockDummyableSpace implements ITooltipP
 
     @Override
     public boolean onBlockActivated(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (player.getHeldItem(hand).getItem() instanceof com.hbm.items.machine.ItemReactorSensor) return false;
         if(world.isRemote) {
             return true;
         } else if(!player.isSneaking()) {
             // Find the controller TileEntity
             int[] posC = findCore(world, pos.getX(), pos.getY(), pos.getZ());
+            if (posC == null) return false;
 
             TileEntity e = world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
             if(e instanceof TileEntityDishControl entityDishControl) {

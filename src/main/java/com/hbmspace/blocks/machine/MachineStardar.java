@@ -77,6 +77,7 @@ public class MachineStardar extends BlockDummyableSpace implements ITooltipProvi
 
     @Override
     public boolean onBlockActivated(@NotNull World world, BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (player.getHeldItem(hand).getItem() instanceof com.hbm.items.machine.ItemReactorSensor) return false;
         return this.standardOpenBehavior(world, pos.getX(), pos.getY(), pos.getZ(), player, 0);
     }
 

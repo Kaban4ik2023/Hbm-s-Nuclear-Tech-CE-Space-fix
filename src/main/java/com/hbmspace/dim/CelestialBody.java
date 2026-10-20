@@ -152,7 +152,8 @@ public class CelestialBody {
 
 	public CelestialBody withBlockTextures(String stone, String surface) {
 		this.stoneTexture = stone;
-		this.surfaceTexture = new ResourceLocation(surface);
+		ResourceLocation sprite = new ResourceLocation(surface);
+		this.surfaceTexture = new ResourceLocation(sprite.getNamespace(), "textures/" + sprite.getPath() + ".png");
 		return this;
 	}
 

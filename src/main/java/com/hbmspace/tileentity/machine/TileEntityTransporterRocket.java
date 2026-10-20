@@ -77,12 +77,15 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
     // Check that we have enough fuel to send to our destination
     @Override
     protected boolean canSend(TileEntityTransporterBase linkedTransporter) {
+        if (!(linkedTransporter instanceof TileEntityTransporterRocket)) return false;
         if(launchTicks > -20) return false;
         if(((TileEntityTransporterRocket)linkedTransporter).launchTicks < 100) return false;
         if(!hasRocket) return false;
 
         int mass = itemCount();
         if(mass < getThreshold()) return false;
+        // An empty rocket only returns when the other pad has cargo waiting.
+        if(mass == 0 && linkedTransporter.itemCount() == 0) return false;
 
         FT_Rocket fuelStats = tanks[8].getTankType().getTrait(FT_Rocket.class);
         if(fuelStats == null) fuelStats = tanks[9].getTankType().getTrait(FT_Rocket.class);
@@ -92,7 +95,7 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
         ItemVOTVdrive.Target from = CelestialBody.getTarget(world, pos.getX(), pos.getZ());
         ItemVOTVdrive.Target to = CelestialBody.getTarget(linkedTransporter.getWorld(), linkedTransporter.getPos().getX(), linkedTransporter.getPos().getZ());
 
-        int sendCost = Math.min(64_000, SolarSystem.getCostBetween(from.body, to.body, mass * MASS_MULT, (int)fuelStats.getThrust(), fuelStats.getISP(), from.inOrbit, to.inOrbit));
+        int sendCost = getSendCost(from, to, mass, fuelStats);
 
         return tanks[8].getFill() >= sendCost && tanks[9].getFill() >= sendCost;
     }
@@ -106,7 +109,7 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
         ItemVOTVdrive.Target from = CelestialBody.getTarget(world, pos.getX(), pos.getZ());
         ItemVOTVdrive.Target to = CelestialBody.getTarget(linkedTransporter.getWorld(), linkedTransporter.getPos().getX(), linkedTransporter.getPos().getZ());
 
-        int sendCost = Math.min(64_000, SolarSystem.getCostBetween(from.body, to.body, quantitySent * MASS_MULT, (int)fuelStats.getThrust(), fuelStats.getISP(), from.inOrbit, to.inOrbit));
+        int sendCost = getSendCost(from, to, quantitySent, fuelStats);
 
         tanks[8].setFill(tanks[8].getFill() - sendCost);
         tanks[9].setFill(tanks[9].getFill() - sendCost);
@@ -119,6 +122,15 @@ public class TileEntityTransporterRocket extends TileEntityTransporterBase {
     protected void hasConnected(TileEntityTransporterBase linkedTransporter) {
         hasRocket = true;
         ((TileEntityTransporterRocket)linkedTransporter).hasRocket = false;
+        launchTicks = -20;
+        ((TileEntityTransporterRocket)linkedTransporter).launchTicks = 100;
+    }
+
+    private int getSendCost(ItemVOTVdrive.Target from, ItemVOTVdrive.Target to, int quantity, FT_Rocket fuel) {
+        // Even an empty return flight (or an orbital transfer with zero delta-v)
+        // needs propellant. Keep the existing 64-bucket upper limit.
+        return Math.max(100, Math.min(64_000, SolarSystem.getCostBetween(from.body, to.body,
+                Math.max(1, quantity) * MASS_MULT, (int) fuel.getThrust(), fuel.getISP(), from.inOrbit, to.inOrbit)));
     }
 
     @Override

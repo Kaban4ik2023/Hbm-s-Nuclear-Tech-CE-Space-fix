@@ -50,8 +50,10 @@ jobs:
             echo "::error::modVersion is empty in gradle.properties"; exit 1
           fi
           echo "MOD_VERSION=${MOD_VERSION}" >> "$GITHUB_ENV"
-          echo "TAG=v${MOD_VERSION}" >> "$GITHUB_ENV"
-          echo "tag=v${MOD_VERSION}" >> "$GITHUB_OUTPUT"
+          BUILD_DATE=$(TZ=Asia/Yekaterinburg date +'%Y-%m-%d')
+          echo "BUILD_DATE=${BUILD_DATE}" >> "$GITHUB_ENV"
+          echo "TAG=v${MOD_VERSION}-fix-${BUILD_DATE}" >> "$GITHUB_ENV"
+          echo "tag=v${MOD_VERSION}-fix-${BUILD_DATE}" >> "$GITHUB_OUTPUT"
 
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
@@ -59,7 +61,7 @@ jobs:
       - name: Find mod jar (non-dev/non-sources/non-api)
         run: |
           set -euo pipefail
-          FILE=$(ls -t build/libs/*.jar 2>/dev/null | grep -vE '(-dev|-sources|-api)\.jar$' | head -n1 || true)
+          FILE=$(find build/libs -maxdepth 1 -type f -name 'NTM-Space-1.12.2+fix-*.jar' ! -name '*-dev*' ! -name '*-sources.jar' ! -name '*-api.jar' ! -name '*-java25.jar' ! -name '*-downgraded.jar' -print -quit)
           if [[ -z "${FILE}" ]]; then
             echo "::error::No release jar found in build/libs"; ls -al build/libs || true; exit 1
           fi
@@ -104,11 +106,11 @@ jobs:
 
             ## Which JAR should I download?
 
-            - **NTM-Space-1.12.2-${{ env.MOD_VERSION }}.jar** — **Java 8+** (recommended for most Forge users)
-            - **NTM-Space-1.12.2-${{ env.MOD_VERSION }}-java25.jar** — **Java 25+** (Cleanroom; may be more efficient)
-            - **NTM-Space-1.12.2-${{ env.MOD_VERSION }}-downgraded.jar** — **Java 8+**, but **does not** shade the JVMDG `java-api` (useful if you provide a custom one)
-            - **NTM-Space-1.12.2-${{ env.MOD_VERSION }}-dev.jar** — **Java 8+**, unobfuscated (for developers)
-            - **NTM-Space-1.12.2-${{ env.MOD_VERSION }}-dev-java25.jar** — **Java 25+**, unobfuscated (for developers on the JVMDG/Cleanroom toolchain)
+            - **NTM-Space-1.12.2+fix-${{ env.MOD_VERSION }}-${{ env.BUILD_DATE }}.jar** — **Java 8+** (recommended for most Forge users)
+            - **NTM-Space-1.12.2+fix-${{ env.MOD_VERSION }}-${{ env.BUILD_DATE }}-java25.jar** — **Java 25+** (Cleanroom; may be more efficient)
+            - **NTM-Space-1.12.2+fix-${{ env.MOD_VERSION }}-${{ env.BUILD_DATE }}-downgraded.jar** — **Java 8+**, but **does not** shade the JVMDG `java-api` (useful if you provide a custom one)
+            - **NTM-Space-1.12.2+fix-${{ env.MOD_VERSION }}-${{ env.BUILD_DATE }}-dev.jar** — **Java 8+**, unobfuscated (for developers)
+            - **NTM-Space-1.12.2+fix-${{ env.MOD_VERSION }}-${{ env.BUILD_DATE }}-dev-java25.jar** — **Java 25+**, unobfuscated (for developers on the JVMDG/Cleanroom toolchain)
 
             **Commit:** `${{ github.sha }}`
             **Workflow run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

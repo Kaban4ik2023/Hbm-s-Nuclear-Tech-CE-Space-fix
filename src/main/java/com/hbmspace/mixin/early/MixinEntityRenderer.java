@@ -1,4 +1,4 @@
-package com.hbmspace.mixin;
+package com.hbmspace.mixin.early;
 
 import net.minecraft.client.renderer.EntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;

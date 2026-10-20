@@ -1,4 +1,4 @@
-package com.hbmspace.mixin.mod.optifine;
+package com.hbmspace.mixin.early.optifine;
 
 import com.hbmspace.config.SpaceConfig;
 import com.hbmspace.world.PlanetGen;

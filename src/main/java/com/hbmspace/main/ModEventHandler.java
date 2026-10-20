@@ -108,6 +108,13 @@ public class ModEventHandler {
     }
 
     @SubscribeEvent
+    public static void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
+        // The first-join teleport must survive both death and dimension travel.
+        HbmLivingPropsSpace.getData(event.getEntityPlayer()).setWarped(
+                HbmLivingPropsSpace.getData(event.getOriginal()).hasWarped());
+    }
+
+    @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if(event.player.world.getWorldInfo().getTerrainType() instanceof WorldTypeTeleport teleport) {
             HbmLivingCapabilitySpace.IEntityHbmProps props = HbmLivingPropsSpace.getData(event.player);

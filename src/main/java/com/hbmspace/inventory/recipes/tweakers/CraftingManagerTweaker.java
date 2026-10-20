@@ -16,11 +16,18 @@ import com.hbmspace.blocks.ModBlocksSpace;
 import com.hbmspace.enums.EnumAddonWatzTypes;
 import com.hbmspace.items.ModItemsSpace;
 import com.hbmspace.items.enums.ItemEnumsSpace;
+import com.hbmspace.inventory.materials.MatsSpace;
 import com.hbmspace.util.RecipeUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistryModifiable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.hbm.crafting.MineralRecipes.addBilletToIngot;
 import static com.hbm.crafting.RodRecipes.addPellet;
@@ -29,8 +36,24 @@ import static com.hbmspace.inventory.OreDictManagerSpace.*;
 
 public class CraftingManagerTweaker extends CraftingManager {
 
+    private static void fixSemtexFragments() {
+        ItemStack fragment = MatsSpace.MAT_SEMTEX.make(ModItems.bedrock_ore_fragment);
+        if (hack != null && hack.getRegistry() instanceof IForgeRegistryModifiable<?> registry) {
+            List<ResourceLocation> obsolete = new ArrayList<>();
+            for (IRecipe recipe : hack.getRegistry().getValuesCollection()) {
+                if (recipe.getRecipeOutput().getItem() == ModItems.nothing && recipe.getIngredients().size() == 9
+                        && recipe.getIngredients().stream().allMatch(ingredient -> ingredient.apply(fragment))) {
+                    obsolete.add(recipe.getRegistryName());
+                }
+            }
+            for (ResourceLocation name : obsolete) registry.remove(name);
+        }
+        addRecipeAuto(new ItemStack(ModItems.ingot_semtex), "###", "###", "###", '#', fragment);
+    }
+
     public static void tweak() {
         SmeltingRecipesTweaker.init();
+        fixSemtexFragments();
 
         /* ArmorRecipes */
 

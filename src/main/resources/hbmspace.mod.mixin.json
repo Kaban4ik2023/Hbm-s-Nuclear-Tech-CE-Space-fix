@@ -17,6 +17,7 @@
     "hbm.particle.MixinParticleRocketFlame"
   ],
   "mixins": [
+    "buildcraft.MixinOilGenerator",
     "hbm.MixinArmorFSB",
     "hbm.MixinDictFrame",
     "hbm.MixinEntityEffectHandler",
@@ -36,6 +37,7 @@
     "hbm.items.MixinItemOilDetector",
     "hbm.items.MixinItemOreDensityScanner",
     "hbm.items.MixinItemRBMKRod",
+    "hbm.items.MixinItemReactorSensor",
     "hbm.jei.MixinOreSlopperHandler",
     "hbm.recipes.MixinCokerRecipes",
     "hbm.recipes.MixinCraftingManager",
@@ -48,7 +50,8 @@
     "hbm.tileentities.MixinTileEntityOilDrillBase",
     "hbm.tileentities.MixinTileEntityMachineFrackingTower",
     "hbm.tileentities.MixinTileEntityMachineOreSlopper",
-    "hbm.tileentities.MixinTileEntityMachinePumpBase"
+    "hbm.tileentities.MixinTileEntityMachinePumpBase",
+    "hbm.tileentities.MixinTileEntityProxyCombo"
   ],
   "server": [],
   "setSourceFile": true,
