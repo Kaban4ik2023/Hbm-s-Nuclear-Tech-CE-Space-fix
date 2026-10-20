@@ -25,13 +25,13 @@ public abstract class BiomeGenBaseCelestial extends Biome {
     // including for creature types added with EnumHelper (e.g. Multi Mob).
     @Override
     public @NotNull List<SpawnListEntry> getSpawnableList(EnumCreatureType type) {
-        return switch (type) {
-            case MONSTER -> monsters;
-            case CREATURE -> creatures;
-            case WATER_CREATURE -> waterCreatures;
-            case AMBIENT -> caveCreatures;
-            default -> additionalCreatures.computeIfAbsent(type, key -> new ArrayList<>());
-        };
+        // Avoid an enum switch table: EnumHelper may append types after this
+        // class has loaded, which would leave a cached ordinal table too short.
+        if (type == EnumCreatureType.MONSTER) return monsters;
+        if (type == EnumCreatureType.CREATURE) return creatures;
+        if (type == EnumCreatureType.WATER_CREATURE) return waterCreatures;
+        if (type == EnumCreatureType.AMBIENT) return caveCreatures;
+        return additionalCreatures.computeIfAbsent(type, key -> new ArrayList<>());
     }
     
 }

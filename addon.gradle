@@ -14,6 +14,20 @@ tasks.withType(Jar).configureEach {
     manifest.attributes('Build-Date': buildDate, 'Implementation-Version': "${project.version}+fix.${buildDate}")
 }
 
+// The upstream script copies this API at configuration time, before `clean`
+// deletes build/. Restore it as a declared task dependency before downgrading.
+def prepareJvmDowngraderApi = tasks.register('prepareJvmDowngraderApi', Copy) {
+    from('libs/jvmdowngrader-java-api-1.3.4-downgraded-8.jar')
+    into(layout.buildDirectory.dir('jvmdg'))
+    mustRunAfter(tasks.named('clean'))
+}
+tasks.named('downgradeJar') {
+    dependsOn(prepareJvmDowngraderApi)
+}
+tasks.named('shadeDowngradedApi') {
+    dependsOn(prepareJvmDowngraderApi)
+}
+
 // Main sources use Java 25; unit tests load them before the Java 8 downgrade.
 tasks.named('test', Test) {
     javaLauncher = javaToolchains.launcherFor {

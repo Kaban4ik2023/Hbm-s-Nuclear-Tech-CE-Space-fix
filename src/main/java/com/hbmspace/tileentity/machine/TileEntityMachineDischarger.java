@@ -270,6 +270,7 @@ public class TileEntityMachineDischarger extends TileEntityMachineBase implement
 
 
     public void onChunkUnload() {
+        super.onChunkUnload();
 
         if(audio != null) {
             audio.stopSound();

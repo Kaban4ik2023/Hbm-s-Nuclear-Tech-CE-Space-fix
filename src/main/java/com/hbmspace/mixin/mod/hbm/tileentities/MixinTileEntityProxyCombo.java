@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(TileEntityProxyCombo.class)
 public abstract class MixinTileEntityProxyCombo extends TileEntityProxyBase {
-    @Shadow boolean inventory;
+    @Shadow(remap = false) boolean inventory;
 
     @Override
     public void onLoad() {

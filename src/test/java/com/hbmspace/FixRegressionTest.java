@@ -7,6 +7,7 @@ import com.hbmspace.capability.HbmLivingCapabilitySpace;
 import com.hbmspace.dim.BiomeGenBaseCelestial;
 import com.hbmspace.dim.CelestialBody;
 import com.hbmspace.util.TransporterInventoryTransfer;
+import com.hbmspace.tileentity.machine.TileEntityMachineDischarger;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.init.Bootstrap;
@@ -29,6 +30,16 @@ class FixRegressionTest {
     @BeforeAll
     static void bootstrapMinecraft() {
         Bootstrap.register();
+    }
+
+    @Test
+    void dischargerStopsAdvertisingItselfWhenUnloaded() {
+        TileEntityMachineDischarger discharger = new TileEntityMachineDischarger();
+        assertTrue(discharger.isLoaded());
+        discharger.onChunkUnload();
+        assertFalse(discharger.isLoaded());
+        discharger.onLoad();
+        assertTrue(discharger.isLoaded());
     }
 
     @Test
